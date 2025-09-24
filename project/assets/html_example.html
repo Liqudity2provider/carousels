@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Strength Carousel</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: #f0f0f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .carousel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            max-width: 600px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: #667eea;
+            transform: scale(1.2);
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            width: 500px;
+            height: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .card.active {
+            display: flex;
+        }
+
+        /* For cards without author section */
+        .card .content {
+            height: 420px;
+        }
+
+        /* For cards with author section (first and last) */
+        .card:first-of-type .content,
+        .card:last-of-type .content {
+            height: 350px;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(240, 240, 240, 0.8) 0%, rgba(220, 220, 220, 0.8) 100%);
+            border-radius: 100% 0 20px 0;
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .header.large {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .emoji {
+            font-size: 28px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            margin-top: -2px;
+        }
+
+        .main-text {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .secondary-text {
+            font-size: 24px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .body-text {
+            font-size: 22px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .closing-text {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .cta-text {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .author-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        .author-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background-image: url('https://i.postimg.cc/bwh3wSnq/553042825-17844380376578084-4981825539930091566-n.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verified-icon {
+            color: #1da1f2;
+            font-size: 18px;
+            background: #1da1f2;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .author-handle {
+            font-size: 16px;
+            color: #666;
+            margin: 4px 0 0 0;
+            font-weight: 400;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            align-items: center;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .download-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: #27ae60;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                width: 90vw;
+                height: 90vw;
+                max-width: 400px;
+                max-height: 400px;
+                padding: 35px 30px 30px 30px;
+            }
+
+            .header {
+                font-size: 20px;
+                margin-bottom: 25px;
+            }
+
+            .emoji {
+                font-size: 24px;
+            }
+
+            .main-text, .secondary-text {
+                font-size: 20px;
+            }
+
+            .body-text {
+                font-size: 18px;
+            }
+
+            .closing-text, .cta-text {
+                font-size: 18px;
+            }
+
+            .author-avatar {
+                width: 45px;
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="carousel-container">
+        <div class="navigation">
+            <div class="nav-dot active" onclick="showCard(0)"></div>
+            <div class="nav-dot" onclick="showCard(1)"></div>
+            <div class="nav-dot" onclick="showCard(2)"></div>
+            <div class="nav-dot" onclick="showCard(3)"></div>
+            <div class="nav-dot" onclick="showCard(4)"></div>
+            <div class="nav-dot" onclick="showCard(5)"></div>
+            <div class="nav-dot" onclick="showCard(6)"></div>
+        </div>
+
+        <!-- Card 1 (Hook) -->
+        <div class="card active">
+            <div class="content">
+                <div class="header large">
+                    <span class="emoji">👉</span>
+                    <span>6 sygnałów, że stajesz się psychicznie silniejszy.</span>
+                </div>
+
+                <div class="main-text">
+                    Nie zauważasz ich od razu.
+                </div>
+
+                <div class="secondary-text">
+                    Ale pewnego dnia łapiesz się na tym, że reagujesz zupełnie inaczej niż kiedyś.
+                </div>
+            </div>
+
+            <div class="author-section">
+                <div class="author-avatar"></div>
+                <div class="author-info">
+                    <div class="author-name">
+                        Daniel Tur
+                        <span class="verified-icon">✓</span>
+                    </div>
+                    <div class="author-handle">@cryptur_daniel</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="content">
+                <div class="header">
+                    <span class="emoji">🔹</span>
+                    <span>Nie uciekasz od trudnych emocji.</span>
+                </div>
+
+                <div class="body-text">
+                    Kiedyś zagłuszałeś smutek, złość czy lęk – scrollowaniem, jedzeniem albo rozmowami o niczym.<br><br>
+                    Dziś potrafisz je zauważyć, nazwać i przeczekać, nie walcząc z nimi.
+                </div>
+
+                <div class="secondary-text">
+                    To nie znaczy, że nie cierpisz. Ale wiesz, że emocje są jak fala – przychodzą i odchodzą. A ty nie toniesz, tylko uczysz się surfować.
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="content">
+                <div class="header">
+                    <span class="emoji">🔹</span>
+                    <span>Umiesz powiedzieć „nie" bez poczucia winy.</span>
+                </div>
+
+                <div class="body-text">
+                    Dawniej zgadzałeś się na spotkania, współprace, zobowiązania, których nie chciałeś.<br><br>
+                    Dziś wiesz, że twoja energia i czas to ograniczone zasoby.
+                </div>
+
+                <div class="secondary-text">
+                    Odmowa nie czyni cię złym człowiekiem. Wręcz przeciwnie – pokazuje, że szanujesz siebie.
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="content">
+                <div class="header">
+                    <span class="emoji">🔹</span>
+                    <span>Nie szukasz aprobaty na każdym kroku.</span>
+                </div>
+
+                <div class="body-text">
+                    Kiedyś twoje decyzje zależały od tego, co powiedzą inni.<br><br>
+                    Teraz potrafisz słuchać siebie.
+                </div>
+
+                <div class="secondary-text">
+                    Opinie ludzi wciąż mogą być ważne, ale nie są już kompasem twojego życia. To ty decydujesz, w którą stronę iść.
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="content">
+                <div class="header">
+                    <span class="emoji">🔹</span>
+                    <span>Potrafisz odpuścić to, co cię niszczy.</span>
+                </div>
+
+                <div class="body-text">
+                    Toksyczna relacja, praca bez sensu, przyzwyczajenie, które zabiera siłę – kiedyś trzymałeś się ich ze strachu.<br><br>
+                    Dziś widzisz różnicę między „trudnością, którą warto przejść" a „więzieniem, które trzeba opuścić".
+                </div>
+
+                <div class="secondary-text">
+                    Silniejszy psychicznie człowiek nie boi się zamknąć drzwi.
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="content">
+                <div class="header">
+                    <span class="emoji">🔹</span>
+                    <span>Nie wchodzisz w każdą dramę.</span>
+                </div>
+
+                <div class="body-text">
+                    Kiedyś odpowiadałeś impulsywnie, dawałeś się wciągać w konflikty i niekończące się dyskusje.<br><br>
+                    Dziś wybierasz spokój.
+                </div>
+
+                <div class="secondary-text">
+                    Nie oznacza to obojętności – po prostu wiesz, że twoja energia jest zbyt cenna, by rozdawać ją każdemu, kto prowokuje.
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 7 (Closing) -->
+        <div class="card">
+            <div class="content">
+                <div class="header">
+                    <span class="emoji">💡</span>
+                    <span>Bycie silnym psychicznie nie oznacza bycia twardym cały czas.</span>
+                </div>
+
+                <div class="closing-text">
+                    Oznacza świadomość, że masz wpływ na swoje reakcje i wybory.
+                </div>
+
+                <div class="cta-text">
+                    👉 Zapisz tę karuzelę, żeby wrócić do niej w trudniejszych momentach.<br><br>
+                    👉 Podziel się z kimś, kto potrzebuje dziś takiego przypomnienia.
+                </div>
+            </div>
+
+            <div class="author-section">
+                <div class="author-avatar"></div>
+                <div class="author-info">
+                    <div class="author-name">
+                        Daniel Tur
+                        <span class="verified-icon">✓</span>
+                    </div>
+                    <div class="author-handle">@cryptur_daniel</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prevBtn" onclick="previousCard()" disabled>← Poprzednia</button>
+                <button class="nav-btn" id="nextBtn" onclick="nextCard()">Następna →</button>
+            </div>
+            <button class="download-btn" onclick="downloadCurrentCard()">
+                📥 Pobierz kartę
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        let currentCard = 0;
+        const totalCards = 7;
+
+        function showCard(index) {
+            // Hide all cards
+            const cards = document.querySelectorAll('.card');
+            const dots = document.querySelectorAll('.nav-dot');
+
+            cards.forEach(card => card.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            // Show selected card
+            cards[index].classList.add('active');
+            dots[index].classList.add('active');
+
+            currentCard = index;
+            updateNavButtons();
+        }
+
+        function nextCard() {
+            if (currentCard < totalCards - 1) {
+                showCard(currentCard + 1);
+            }
+        }
+
+        function previousCard() {
+            if (currentCard > 0) {
+                showCard(currentCard - 1);
+            }
+        }
+
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = currentCard === 0;
+            nextBtn.disabled = currentCard === totalCards - 1;
+        }
+
+        async function downloadCurrentCard() {
+            const activeCard = document.querySelector('.card.active');
+            const downloadBtn = document.querySelector('.download-btn');
+
+            // Show loading state
+            downloadBtn.innerHTML = '⏳ Generowanie...';
+            downloadBtn.disabled = true;
+
+            try {
+                // Create a temporary wrapper with background padding
+                const wrapper = document.createElement('div');
+                wrapper.style.cssText = `
+                    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                    padding: 60px;
+                    display: inline-block;
+                    border-radius: 0;
+                `;
+
+                // Clone the active card
+                const cardClone = activeCard.cloneNode(true);
+                cardClone.classList.add('active');
+                wrapper.appendChild(cardClone);
+
+                // Temporarily add to document (hidden)
+                wrapper.style.position = 'absolute';
+                wrapper.style.left = '-9999px';
+                wrapper.style.top = '-9999px';
+                document.body.appendChild(wrapper);
+
+                const canvas = await html2canvas(wrapper, {
+                    backgroundColor: 'transparent',
+                    scale: 2, // Higher quality
+                    useCORS: true,
+                    allowTaint: true,
+                    width: 620, // 500 + (60*2) padding
+                    height: 620, // 500 + (60*2) padding
+                    scrollX: 0,
+                    scrollY: 0
+                });
+
+                // Clean up temporary wrapper
+                document.body.removeChild(wrapper);
+
+                // Create download link
+                const link = document.createElement('a');
+                link.download = `mental-strength-card-${currentCard + 1}.png`;
+                link.href = canvas.toDataURL('image/png');
+
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+            } catch (error) {
+                console.error('Error generating image:', error);
+                alert('Wystąpił błąd podczas generowania obrazu. Spróbuj ponownie.');
+            } finally {
+                // Reset button state
+                downloadBtn.innerHTML = '📥 Pobierz kartę';
+                downloadBtn.disabled = false;
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') previousCard();
+            if (event.key === 'ArrowRight') nextCard();
+        });
+    </script>
+</body>
+</html>
