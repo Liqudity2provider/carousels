@@ -3,7 +3,7 @@ import logging
 import os
 import uuid
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 import aiofiles
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -223,11 +223,26 @@ Zwróć tylko gotową treść karuzeli bez dodatkowych komentarzy.
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             
-            await update.message.reply_text(
-                f"🎯 *Generated Carousel Content:*\n\n{preview_text}",
-                reply_markup=reply_markup,
-                parse_mode='Markdown'
-            )
+            # Handle long messages by splitting if necessary
+            full_message = f"🎯 *Generated Carousel Content:*\n\n{preview_text}"
+            
+            if len(full_message) > 4000:  # Leave some buffer for Telegram's 4096 limit
+                # Send content in parts
+                await update.message.reply_text("🎯 *Generated Carousel Content:*", parse_mode='Markdown')
+                
+                # Split content into chunks
+                chunks = self.split_message(preview_text, 3800)
+                for i, chunk in enumerate(chunks):
+                    if i == len(chunks) - 1:  # Last chunk gets the buttons
+                        await update.message.reply_text(chunk, reply_markup=reply_markup, parse_mode='Markdown')
+                    else:
+                        await update.message.reply_text(chunk, parse_mode='Markdown')
+            else:
+                await update.message.reply_text(
+                    full_message,
+                    reply_markup=reply_markup,
+                    parse_mode='Markdown'
+                )
             
         except Exception as e:
             logger.error(f"Error generating content: {e}")
@@ -236,20 +251,38 @@ Zwróć tylko gotową treść karuzeli bez dodatkowych komentarzy.
             )
             
     def format_content_preview(self, content: str) -> str:
-        """Format content for preview (truncate if too long)"""
-        lines = content.split('\n')
-        preview_lines = []
+        """Format content for preview (show full content)"""
+        # Return the full content without truncation
+        return content
+    
+    def split_message(self, text: str, max_length: int) -> List[str]:
+        """Split long text into chunks that fit Telegram's message limit"""
+        if len(text) <= max_length:
+            return [text]
         
-        for line in lines[:15]:  # Show first 15 lines
-            if line.strip():
-                preview_lines.append(line[:100] + "..." if len(line) > 100 else line)
-                
-        preview = '\n'.join(preview_lines)
+        chunks = []
+        lines = text.split('\n')
+        current_chunk = ""
         
-        if len(lines) > 15:
-            preview += f"\n\n... (and {len(lines) - 15} more lines)"
-            
-        return preview[:1500] + "..." if len(preview) > 1500 else preview
+        for line in lines:
+            # If adding this line would exceed the limit
+            if len(current_chunk) + len(line) + 1 > max_length:
+                if current_chunk:
+                    chunks.append(current_chunk.strip())
+                    current_chunk = line + '\n'
+                else:
+                    # Single line is too long, split it
+                    while len(line) > max_length:
+                        chunks.append(line[:max_length])
+                        line = line[max_length:]
+                    current_chunk = line + '\n'
+            else:
+                current_chunk += line + '\n'
+        
+        if current_chunk.strip():
+            chunks.append(current_chunk.strip())
+        
+        return chunks
         
     async def approve_content(self, query, user_id: int):
         """User approved the generated content, proceed to HTML generation"""
@@ -364,11 +397,26 @@ Zwróć tylko zmodyfikowaną treść bez dodatkowych komentarzy.
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             
-            await update.message.reply_text(
-                f"🔄 *Modified Carousel Content:*\n\n{preview_text}",
-                reply_markup=reply_markup,
-                parse_mode='Markdown'
-            )
+            # Handle long messages by splitting if necessary
+            full_message = f"🔄 *Modified Carousel Content:*\n\n{preview_text}"
+            
+            if len(full_message) > 4000:  # Leave some buffer for Telegram's 4096 limit
+                # Send content in parts
+                await update.message.reply_text("🔄 *Modified Carousel Content:*", parse_mode='Markdown')
+                
+                # Split content into chunks
+                chunks = self.split_message(preview_text, 3800)
+                for i, chunk in enumerate(chunks):
+                    if i == len(chunks) - 1:  # Last chunk gets the buttons
+                        await update.message.reply_text(chunk, reply_markup=reply_markup, parse_mode='Markdown')
+                    else:
+                        await update.message.reply_text(chunk, parse_mode='Markdown')
+            else:
+                await update.message.reply_text(
+                    full_message,
+                    reply_markup=reply_markup,
+                    parse_mode='Markdown'
+                )
             
         except Exception as e:
             logger.error(f"Error modifying content: {e}")

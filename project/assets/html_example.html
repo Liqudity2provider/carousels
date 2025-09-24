@@ -220,6 +220,35 @@
             gap: 20px;
             margin-top: 20px;
             align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .edit-toggle-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: #f39c12;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-toggle-btn:hover {
+            background: #d68910;
+            transform: translateY(-2px);
+        }
+
+        .edit-toggle-btn.active {
+            background: #e74c3c;
+        }
+
+        .edit-toggle-btn.active:hover {
+            background: #c0392b;
         }
 
         .nav-buttons {
@@ -265,9 +294,38 @@
             gap: 8px;
         }
 
-        .download-btn:hover {
-            background: #219a52;
-            transform: translateY(-2px);
+        .editable {
+            cursor: text;
+            transition: background-color 0.2s ease;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .editable:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .editable:focus {
+            outline: 2px solid #667eea;
+            background-color: rgba(102, 126, 234, 0.05);
+        }
+
+        .edit-mode-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            z-index: 1000;
+        }
+
+        .edit-mode-indicator.active {
+            display: block;
         }
 
         @media (max-width: 600px) {
@@ -324,14 +382,14 @@
             <div class="content">
                 <div class="header large">
                     <span class="emoji">👉</span>
-                    <span>6 sygnałów, że stajesz się psychicznie silniejszy.</span>
+                    <span class="editable" contenteditable="false">6 sygnałów, że stajesz się psychicznie silniejszy.</span>
                 </div>
 
-                <div class="main-text">
+                <div class="main-text editable" contenteditable="false">
                     Nie zauważasz ich od razu.
                 </div>
 
-                <div class="secondary-text">
+                <div class="secondary-text editable" contenteditable="false">
                     Ale pewnego dnia łapiesz się na tym, że reagujesz zupełnie inaczej niż kiedyś.
                 </div>
             </div>
@@ -353,15 +411,15 @@
             <div class="content">
                 <div class="header">
                     <span class="emoji">🔹</span>
-                    <span>Nie uciekasz od trudnych emocji.</span>
+                    <span class="editable" contenteditable="false">Nie uciekasz od trudnych emocji.</span>
                 </div>
 
-                <div class="body-text">
+                <div class="body-text editable" contenteditable="false">
                     Kiedyś zagłuszałeś smutek, złość czy lęk – scrollowaniem, jedzeniem albo rozmowami o niczym.<br><br>
                     Dziś potrafisz je zauważyć, nazwać i przeczekać, nie walcząc z nimi.
                 </div>
 
-                <div class="secondary-text">
+                <div class="secondary-text editable" contenteditable="false">
                     To nie znaczy, że nie cierpisz. Ale wiesz, że emocje są jak fala – przychodzą i odchodzą. A ty nie toniesz, tylko uczysz się surfować.
                 </div>
             </div>
@@ -372,15 +430,15 @@
             <div class="content">
                 <div class="header">
                     <span class="emoji">🔹</span>
-                    <span>Umiesz powiedzieć „nie" bez poczucia winy.</span>
+                    <span class="editable" contenteditable="false">Umiesz powiedzieć „nie" bez poczucia winy.</span>
                 </div>
 
-                <div class="body-text">
+                <div class="body-text editable" contenteditable="false">
                     Dawniej zgadzałeś się na spotkania, współprace, zobowiązania, których nie chciałeś.<br><br>
                     Dziś wiesz, że twoja energia i czas to ograniczone zasoby.
                 </div>
 
-                <div class="secondary-text">
+                <div class="secondary-text editable" contenteditable="false">
                     Odmowa nie czyni cię złym człowiekiem. Wręcz przeciwnie – pokazuje, że szanujesz siebie.
                 </div>
             </div>
@@ -391,15 +449,15 @@
             <div class="content">
                 <div class="header">
                     <span class="emoji">🔹</span>
-                    <span>Nie szukasz aprobaty na każdym kroku.</span>
+                    <span class="editable" contenteditable="false">Nie szukasz aprobaty na każdym kroku.</span>
                 </div>
 
-                <div class="body-text">
+                <div class="body-text editable" contenteditable="false">
                     Kiedyś twoje decyzje zależały od tego, co powiedzą inni.<br><br>
                     Teraz potrafisz słuchać siebie.
                 </div>
 
-                <div class="secondary-text">
+                <div class="secondary-text editable" contenteditable="false">
                     Opinie ludzi wciąż mogą być ważne, ale nie są już kompasem twojego życia. To ty decydujesz, w którą stronę iść.
                 </div>
             </div>
@@ -410,15 +468,15 @@
             <div class="content">
                 <div class="header">
                     <span class="emoji">🔹</span>
-                    <span>Potrafisz odpuścić to, co cię niszczy.</span>
+                    <span class="editable" contenteditable="false">Potrafisz odpuścić to, co cię niszczy.</span>
                 </div>
 
-                <div class="body-text">
+                <div class="body-text editable" contenteditable="false">
                     Toksyczna relacja, praca bez sensu, przyzwyczajenie, które zabiera siłę – kiedyś trzymałeś się ich ze strachu.<br><br>
                     Dziś widzisz różnicę między „trudnością, którą warto przejść" a „więzieniem, które trzeba opuścić".
                 </div>
 
-                <div class="secondary-text">
+                <div class="secondary-text editable" contenteditable="false">
                     Silniejszy psychicznie człowiek nie boi się zamknąć drzwi.
                 </div>
             </div>
@@ -429,15 +487,15 @@
             <div class="content">
                 <div class="header">
                     <span class="emoji">🔹</span>
-                    <span>Nie wchodzisz w każdą dramę.</span>
+                    <span class="editable" contenteditable="false">Nie wchodzisz w każdą dramę.</span>
                 </div>
 
-                <div class="body-text">
+                <div class="body-text editable" contenteditable="false">
                     Kiedyś odpowiadałeś impulsywnie, dawałeś się wciągać w konflikty i niekończące się dyskusje.<br><br>
                     Dziś wybierasz spokój.
                 </div>
 
-                <div class="secondary-text">
+                <div class="secondary-text editable" contenteditable="false">
                     Nie oznacza to obojętności – po prostu wiesz, że twoja energia jest zbyt cenna, by rozdawać ją każdemu, kto prowokuje.
                 </div>
             </div>
@@ -448,14 +506,14 @@
             <div class="content">
                 <div class="header">
                     <span class="emoji">💡</span>
-                    <span>Bycie silnym psychicznie nie oznacza bycia twardym cały czas.</span>
+                    <span class="editable" contenteditable="false">Bycie silnym psychicznie nie oznacza bycia twardym cały czas.</span>
                 </div>
 
-                <div class="closing-text">
+                <div class="closing-text editable" contenteditable="false">
                     Oznacza świadomość, że masz wpływ na swoje reakcje i wybory.
                 </div>
 
-                <div class="cta-text">
+                <div class="cta-text editable" contenteditable="false">
                     👉 Zapisz tę karuzelę, żeby wrócić do niej w trudniejszych momentach.<br><br>
                     👉 Podziel się z kimś, kto potrzebuje dziś takiego przypomnienia.
                 </div>
@@ -478,9 +536,16 @@
                 <button class="nav-btn" id="prevBtn" onclick="previousCard()" disabled>← Poprzednia</button>
                 <button class="nav-btn" id="nextBtn" onclick="nextCard()">Następna →</button>
             </div>
+            <button class="edit-toggle-btn" id="editToggleBtn" onclick="toggleEditMode()">
+                ✏️ Edytuj tekst
+            </button>
             <button class="download-btn" onclick="downloadCurrentCard()">
                 📥 Pobierz kartę
             </button>
+        </div>
+
+        <div class="edit-mode-indicator" id="editModeIndicator">
+            Tryb edycji włączony - kliknij na tekst aby edytować
         </div>
     </div>
 
@@ -488,6 +553,7 @@
     <script>
         let currentCard = 0;
         const totalCards = 7;
+        let editMode = false;
 
         function showCard(index) {
             // Hide all cards
@@ -525,6 +591,34 @@
             nextBtn.disabled = currentCard === totalCards - 1;
         }
 
+        function toggleEditMode() {
+            editMode = !editMode;
+            const editToggleBtn = document.getElementById('editToggleBtn');
+            const editModeIndicator = document.getElementById('editModeIndicator');
+            const editableElements = document.querySelectorAll('.editable');
+
+            if (editMode) {
+                // Enable edit mode
+                editToggleBtn.textContent = '💾 Zakończ edycję';
+                editToggleBtn.classList.add('active');
+                editModeIndicator.classList.add('active');
+
+                editableElements.forEach(element => {
+                    element.setAttribute('contenteditable', 'true');
+                });
+            } else {
+                // Disable edit mode
+                editToggleBtn.textContent = '✏️ Edytuj tekst';
+                editToggleBtn.classList.remove('active');
+                editModeIndicator.classList.remove('active');
+
+                editableElements.forEach(element => {
+                    element.setAttribute('contenteditable', 'false');
+                    element.blur(); // Remove focus
+                });
+            }
+        }
+
         async function downloadCurrentCard() {
             const activeCard = document.querySelector('.card.active');
             const downloadBtn = document.querySelector('.download-btn');
@@ -546,6 +640,15 @@
                 // Clone the active card
                 const cardClone = activeCard.cloneNode(true);
                 cardClone.classList.add('active');
+
+                // Remove edit indicators from clone
+                const editableElements = cardClone.querySelectorAll('.editable');
+                editableElements.forEach(element => {
+                    element.setAttribute('contenteditable', 'false');
+                    element.style.backgroundColor = 'transparent';
+                    element.style.outline = 'none';
+                });
+
                 wrapper.appendChild(cardClone);
 
                 // Temporarily add to document (hidden)
@@ -588,10 +691,12 @@
             }
         }
 
-        // Keyboard navigation
+        // Keyboard navigation (only when not in edit mode)
         document.addEventListener('keydown', function(event) {
-            if (event.key === 'ArrowLeft') previousCard();
-            if (event.key === 'ArrowRight') nextCard();
+            if (!editMode) {
+                if (event.key === 'ArrowLeft') previousCard();
+                if (event.key === 'ArrowRight') nextCard();
+            }
         });
     </script>
 </body>
