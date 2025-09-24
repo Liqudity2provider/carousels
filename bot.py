@@ -12,6 +12,7 @@ from anthropic import AsyncAnthropic
 from dotenv import load_dotenv
 import json
 from html_generator import HTMLCarouselGenerator
+from json_html_generator import JSONCarouselGenerator
 from carousel_cache import CarouselCache
 
 # Load environment variables
@@ -39,6 +40,7 @@ class CarouselBot:
     def __init__(self):
         self.app = Application.builder().token(TELEGRAM_TOKEN).build()
         self.html_generator = HTMLCarouselGenerator()
+        self.json_generator = JSONCarouselGenerator()
         self.cache = CarouselCache()
         self.setup_handlers()
         
@@ -183,15 +185,16 @@ class CarouselBot:
 
 TEMAT KARUZELI: {topic}
 
-Stwórz karuzelę na powyższy temat, stosując się dokładnie do podanego formatu i wytycznych. 
+Stwórz karuzelę na powyższy temat w formacie JSON zgodnie z podanym szablonem. 
 Pamiętaj o:
 - Użyciu formy "ty" 
 - Kontraście między przeszłością a teraźniejszością
 - Konkretnych, relatable przykładach
 - Empatycznym tonie
 - Polskim języku
+- Zwróceniu TYLKO poprawnego JSON-a bez dodatkowych komentarzy
 
-Zwróć tylko gotową treść karuzeli bez dodatkowych komentarzy.
+Zwróć tylko poprawny JSON zgodny z szablonem.
 """
 
             # Call Claude API
@@ -213,8 +216,8 @@ Zwróć tylko gotową treść karuzeli bez dodatkowych komentarzy.
             # Delete loading message
             await loading_msg.delete()
             
-            # Show generated content with approval buttons
-            preview_text = self.format_content_preview(generated_content)
+            # Show generated content with approval buttons (format JSON for display)
+            preview_text = self.json_generator.format_cards_for_display(generated_content)
             
             keyboard = [
                 [InlineKeyboardButton("✅ Approve Content", callback_data="approve_content")],
@@ -250,10 +253,6 @@ Zwróć tylko gotową treść karuzeli bez dodatkowych komentarzy.
                 "❌ An error occurred while generating content. Please try again or contact the administrator."
             )
             
-    def format_content_preview(self, content: str) -> str:
-        """Format content for preview (show full content)"""
-        # Return the full content without truncation
-        return content
     
     def split_message(self, text: str, max_length: int) -> List[str]:
         """Split long text into chunks that fit Telegram's message limit"""
@@ -293,8 +292,8 @@ Zwróć tylko gotową treść karuzeli bez dodatkowych komentarzy.
         await query.edit_message_text("🎨 Creating HTML page with your carousel...")
         
         try:
-            # Generate HTML
-            html_content = await self.html_generator.generate_html(content)
+            # Generate HTML from JSON
+            html_content = await self.json_generator.generate_html_from_json(content)
             
             # Store HTML in session
             session.update({
@@ -372,7 +371,7 @@ Zwróć tylko zmodyfikowaną treść bez dodatkowych komentarzy.
 
             # Call Claude API for modifications
             response = await anthropic_client.messages.create(
-                model="claude-3-5-sonnet-20241022",
+                model="claude-sonnet-4-20250514",
                 max_tokens=2000,
                 messages=[{"role": "user", "content": modification_prompt}]
             )
@@ -387,8 +386,8 @@ Zwróć tylko zmodyfikowaną treść bez dodatkowych komentarzy.
             
             await loading_msg.delete()
             
-            # Show modified content
-            preview_text = self.format_content_preview(modified_content)
+            # Show modified content (format JSON for display)
+            preview_text = self.json_generator.format_cards_for_display(modified_content)
             
             keyboard = [
                 [InlineKeyboardButton("✅ Approve Content", callback_data="approve_content")],

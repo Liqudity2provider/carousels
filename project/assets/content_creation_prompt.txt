@@ -1,63 +1,68 @@
-Carousel Content Creation Prompt Template
-Create a carousel post with the following structure:
-TITLE FORMAT:
-KARUSELA: [Number] [signals/ways/signs], że [transformation/achievement/goal]
-CONTENT STRUCTURE:
-Card 1 (Hook):
-👉 [Number] [signals/ways/signs], że [transformation/achievement].
-[First engaging line - often about not noticing immediately]
-[Second line - about sudden realization or change in behavior/reactions]
-⸻
-Cards 2-6 (Main Content):
-🔹 [Signal/Way #1 - clear, actionable statement]
-[Past behavior description - "Kiedyś..." (Previously...)]
-[Present behavior description - "Dziś..." (Today...)]
-[Deeper explanation paragraph - elaborating on the transformation, often with a metaphor or deeper insight]
-⸻
-[Repeat structure for cards 3-6]
-Card 7 (Closing):
-💡 [Summary insight - what this transformation really means]
-[Clarification of what it doesn't mean vs. what it does mean]
-👉 Zapisz tę karuzelę, żeby wrócić do niej w trudniejszych momentach.
-👉 Podziel się z kimś, kto potrzebuje dziś takiego przypomnienia.
+Create a carousel post as a JSON structure with the following format:
+
+{
+  "cards": [
+    {
+      "type": "hook",
+      "header": "[Number] [signals/ways/signs], że [transformation/achievement/goal]",
+      "text": "[First engaging line - often about not noticing immediately]\n\n[Second line - about sudden realization or change in behavior/reactions]"
+    },
+    {
+      "type": "main",
+      "header": "[Signal/Way #1 - clear, actionable statement]",
+      "text": "[Past behavior description - \"Kiedyś...\" (Previously...)]\n\n[Present behavior description - \"Dziś...\" (Today...)]\n\n[Deeper explanation paragraph - elaborating on the transformation]"
+    },
+    {
+      "type": "main",
+      "header": "[Signal/Way #2 - clear, actionable statement]",
+      "text": "[Past behavior description]\n\n[Present behavior description]\n\n[Deeper explanation paragraph]"
+    },
+    {
+      "type": "closing",
+      "header": "[Summary insight - what this transformation really means]",
+      "text": "[Clarification of what it doesn't mean vs. what it does mean]\n\n👉 Zapisz tę karuzelę, żeby wrócić do niej w trudniejszych momentach.\n\n👉 Podziel się z kimś, kto potrzebuje dziś takiego przypomnienia."
+    }
+  ]
+}
+
+IMPORTANT: Return ONLY valid JSON. No additional text, explanations, or formatting.
+
+CARD COUNT FLEXIBILITY:
+- 4-6 cards: Focus on the most impactful signals with deeper explanations
+- 7-9 cards: Standard comprehensive approach with balanced content  
+- 10-12 cards: Include subtle signs and nuanced transformations for thorough coverage
 
 WRITING GUIDELINES:
 Tone & Style:
-
-Conversational and relatable - use "ty" (you) form
-Empathetic and understanding - acknowledge past struggles
-Hopeful and empowering - focus on growth and transformation
-Authentic - avoid overly motivational language
+- Conversational and relatable - use "ty" (you) form
+- Empathetic and understanding - acknowledge past struggles
+- Hopeful and empowering - focus on growth and transformation
+- Authentic - avoid overly motivational language
 
 Content Principles:
-
-Contrast past vs. present behavior in each card
-Use specific, relatable examples (scrolling, eating, meaningless conversations)
-Include metaphors for deeper understanding (emotions as waves, energy as limited resource)
-Focus on internal transformation rather than external achievements
-Acknowledge that change is gradual and sometimes unnoticed
+- Contrast past vs. present behavior in each card
+- Use specific, relatable examples (scrolling, eating, meaningless conversations)
+- Include metaphors for deeper understanding (emotions as waves, energy as limited resource)
+- Focus on internal transformation rather than external achievements
+- Acknowledge that change is gradual and sometimes unnoticed
 
 Language Patterns:
+- Past tense indicators: "Kiedyś..." (Previously), "Dawniej..." (In the past)
+- Present tense indicators: "Dziś..." (Today), "Teraz..." (Now)
+- Transitional phrases: "To nie znaczy, że..." (This doesn't mean that...)
+- Empowering statements: "Wiesz, że..." (You know that...)
 
-Past tense indicators: "Kiedyś..." (Previously), "Dawniej..." (In the past)
-Present tense indicators: "Dziś..." (Today), "Teraz..." (Now)
-Transitional phrases: "To nie znaczy, że..." (This doesn't mean that...)
-Empowering statements: "Wiesz, że..." (You know that...)
-
-Formatting:
-
-Use 🔹 for main content points
-Use 👉 for actionable items and CTAs
-Use 💡 for insights and summaries
-Separate each card with ⸻
-Keep paragraphs short and scannable
+Text Structure:
+- Keep header concise and impactful
+- Limit text to 2-3 paragraphs maximum per card
+- Use \n\n for paragraph breaks in JSON
+- Each main card should have past/present contrast
 
 Example Topics:
-
-Personal growth and mental strength
-Relationship improvements
-Career development
-Healthy habits formation
-Emotional intelligence
-Self-confidence building
-Life balance and priorities
+- Personal growth and mental strength
+- Relationship improvements
+- Career development
+- Healthy habits formation
+- Emotional intelligence
+- Self-confidence building
+- Life balance and priorities

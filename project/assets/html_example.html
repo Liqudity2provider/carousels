@@ -26,27 +26,6 @@
             max-width: 600px;
         }
 
-        .navigation {
-            text-align: center;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        .nav-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ccc;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-block;
-            margin: 0 7.5px;
-        }
-
-        .nav-dot.active {
-            background: #667eea;
-            transform: scale(1.2);
-        }
 
         .card {
             background: white;
@@ -137,11 +116,27 @@
         }
 
         .secondary-text {
-            font-size: 24px;
-            color: #666;
-            line-height: 1.4;
+            font-size: 20px;
+            color: #777;
+            line-height: 1.5;
             margin-bottom: 30px;
             font-weight: 400;
+        }
+
+        .secondary-text.editable {
+            cursor: text;
+            transition: background-color 0.2s ease;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .secondary-text.editable:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+        }
+
+        .secondary-text.editable:focus {
+            outline: 2px solid #667eea;
+            background-color: rgba(102, 126, 234, 0.05);
         }
 
         .body-text {
@@ -153,18 +148,18 @@
         }
 
         .closing-text {
-            font-size: 18px;
-            color: #333;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            font-weight: 500;
+            font-size: 22px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-weight: 400;
         }
 
         .cta-text {
-            font-size: 18px;
-            color: #333;
-            line-height: 1.4;
-            font-weight: 500;
+            font-size: 22px;
+            color: #555;
+            line-height: 1.5;
+            font-weight: 400;
         }
 
         .author-section {
@@ -355,15 +350,15 @@
                 font-size: 24px;
             }
 
-            .main-text, .secondary-text {
+            .main-text {
                 font-size: 20px;
             }
 
-            .body-text {
+            .secondary-text {
                 font-size: 18px;
             }
 
-            .closing-text, .cta-text {
+            .body-text, .closing-text, .cta-text {
                 font-size: 18px;
             }
 
@@ -376,15 +371,6 @@
 </head>
 <body>
 <div class="carousel-container">
-    <div class="navigation">
-        <div class="nav-dot active" onclick="showCard(0)"></div>
-        <div class="nav-dot" onclick="showCard(1)"></div>
-        <div class="nav-dot" onclick="showCard(2)"></div>
-        <div class="nav-dot" onclick="showCard(3)"></div>
-        <div class="nav-dot" onclick="showCard(4)"></div>
-        <div class="nav-dot" onclick="showCard(5)"></div>
-        <div class="nav-dot" onclick="showCard(6)"></div>
-    </div>
 
     <!--        THERE IS A PLACE WHERE DYNAMIC CARDS SHOULD BE INSERTED  -->
 
@@ -416,14 +402,11 @@
     function showCard(index) {
         // Hide all cards
         const cards = document.querySelectorAll('.card');
-        const dots = document.querySelectorAll('.nav-dot');
 
         cards.forEach(card => card.classList.remove('active'));
-        dots.forEach(dot => dot.classList.remove('active'));
 
         // Show selected card
         cards[index].classList.add('active');
-        dots[index].classList.add('active');
 
         currentCard = index;
         updateNavButtons();
