@@ -27,9 +27,9 @@
         }
 
         .navigation {
-            display: flex;
-            gap: 15px;
+            text-align: center;
             margin-bottom: 20px;
+            width: 100%;
         }
 
         .nav-dot {
@@ -39,6 +39,8 @@
             background: #ccc;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: inline-block;
+            margin: 0 7.5px;
         }
 
         .nav-dot.active {
@@ -366,338 +368,214 @@
     </style>
 </head>
 <body>
-    <div class="carousel-container">
-        <div class="navigation">
-            <div class="nav-dot active" onclick="showCard(0)"></div>
-            <div class="nav-dot" onclick="showCard(1)"></div>
-            <div class="nav-dot" onclick="showCard(2)"></div>
-            <div class="nav-dot" onclick="showCard(3)"></div>
-            <div class="nav-dot" onclick="showCard(4)"></div>
-            <div class="nav-dot" onclick="showCard(5)"></div>
-            <div class="nav-dot" onclick="showCard(6)"></div>
-        </div>
-
-        <!-- Card 1 (Hook) -->
-        <div class="card active">
-            <div class="content">
-                <div class="header large">
-                    <span class="emoji">👉</span>
-                    <span class="editable" contenteditable="false">6 sygnałów, że stajesz się psychicznie silniejszy.</span>
-                </div>
-
-                <div class="main-text editable" contenteditable="false">
-                    Nie zauważasz ich od razu.
-                </div>
-
-                <div class="secondary-text editable" contenteditable="false">
-                    Ale pewnego dnia łapiesz się na tym, że reagujesz zupełnie inaczej niż kiedyś.
-                </div>
-            </div>
-
-            <div class="author-section">
-                <div class="author-avatar"></div>
-                <div class="author-info">
-                    <div class="author-name">
-                        Daniel Tur
-                        <span class="verified-icon">✓</span>
-                    </div>
-                    <div class="author-handle">@cryptur_daniel</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="card">
-            <div class="content">
-                <div class="header">
-                    <span class="emoji">🔹</span>
-                    <span class="editable" contenteditable="false">Nie uciekasz od trudnych emocji.</span>
-                </div>
-
-                <div class="body-text editable" contenteditable="false">
-                    Kiedyś zagłuszałeś smutek, złość czy lęk – scrollowaniem, jedzeniem albo rozmowami o niczym.<br><br>
-                    Dziś potrafisz je zauważyć, nazwać i przeczekać, nie walcząc z nimi.
-                </div>
-
-                <div class="secondary-text editable" contenteditable="false">
-                    To nie znaczy, że nie cierpisz. Ale wiesz, że emocje są jak fala – przychodzą i odchodzą. A ty nie toniesz, tylko uczysz się surfować.
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="card">
-            <div class="content">
-                <div class="header">
-                    <span class="emoji">🔹</span>
-                    <span class="editable" contenteditable="false">Umiesz powiedzieć „nie" bez poczucia winy.</span>
-                </div>
-
-                <div class="body-text editable" contenteditable="false">
-                    Dawniej zgadzałeś się na spotkania, współprace, zobowiązania, których nie chciałeś.<br><br>
-                    Dziś wiesz, że twoja energia i czas to ograniczone zasoby.
-                </div>
-
-                <div class="secondary-text editable" contenteditable="false">
-                    Odmowa nie czyni cię złym człowiekiem. Wręcz przeciwnie – pokazuje, że szanujesz siebie.
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="card">
-            <div class="content">
-                <div class="header">
-                    <span class="emoji">🔹</span>
-                    <span class="editable" contenteditable="false">Nie szukasz aprobaty na każdym kroku.</span>
-                </div>
-
-                <div class="body-text editable" contenteditable="false">
-                    Kiedyś twoje decyzje zależały od tego, co powiedzą inni.<br><br>
-                    Teraz potrafisz słuchać siebie.
-                </div>
-
-                <div class="secondary-text editable" contenteditable="false">
-                    Opinie ludzi wciąż mogą być ważne, ale nie są już kompasem twojego życia. To ty decydujesz, w którą stronę iść.
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="card">
-            <div class="content">
-                <div class="header">
-                    <span class="emoji">🔹</span>
-                    <span class="editable" contenteditable="false">Potrafisz odpuścić to, co cię niszczy.</span>
-                </div>
-
-                <div class="body-text editable" contenteditable="false">
-                    Toksyczna relacja, praca bez sensu, przyzwyczajenie, które zabiera siłę – kiedyś trzymałeś się ich ze strachu.<br><br>
-                    Dziś widzisz różnicę między „trudnością, którą warto przejść" a „więzieniem, które trzeba opuścić".
-                </div>
-
-                <div class="secondary-text editable" contenteditable="false">
-                    Silniejszy psychicznie człowiek nie boi się zamknąć drzwi.
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="card">
-            <div class="content">
-                <div class="header">
-                    <span class="emoji">🔹</span>
-                    <span class="editable" contenteditable="false">Nie wchodzisz w każdą dramę.</span>
-                </div>
-
-                <div class="body-text editable" contenteditable="false">
-                    Kiedyś odpowiadałeś impulsywnie, dawałeś się wciągać w konflikty i niekończące się dyskusje.<br><br>
-                    Dziś wybierasz spokój.
-                </div>
-
-                <div class="secondary-text editable" contenteditable="false">
-                    Nie oznacza to obojętności – po prostu wiesz, że twoja energia jest zbyt cenna, by rozdawać ją każdemu, kto prowokuje.
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 7 (Closing) -->
-        <div class="card">
-            <div class="content">
-                <div class="header">
-                    <span class="emoji">💡</span>
-                    <span class="editable" contenteditable="false">Bycie silnym psychicznie nie oznacza bycia twardym cały czas.</span>
-                </div>
-
-                <div class="closing-text editable" contenteditable="false">
-                    Oznacza świadomość, że masz wpływ na swoje reakcje i wybory.
-                </div>
-
-                <div class="cta-text editable" contenteditable="false">
-                    👉 Zapisz tę karuzelę, żeby wrócić do niej w trudniejszych momentach.<br><br>
-                    👉 Podziel się z kimś, kto potrzebuje dziś takiego przypomnienia.
-                </div>
-            </div>
-
-            <div class="author-section">
-                <div class="author-avatar"></div>
-                <div class="author-info">
-                    <div class="author-name">
-                        Daniel Tur
-                        <span class="verified-icon">✓</span>
-                    </div>
-                    <div class="author-handle">@cryptur_daniel</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="controls">
-            <div class="nav-buttons">
-                <button class="nav-btn" id="prevBtn" onclick="previousCard()" disabled>← Poprzednia</button>
-                <button class="nav-btn" id="nextBtn" onclick="nextCard()">Następna →</button>
-            </div>
-            <button class="edit-toggle-btn" id="editToggleBtn" onclick="toggleEditMode()">
-                ✏️ Edytuj tekst
-            </button>
-            <button class="download-btn" onclick="downloadCurrentCard()">
-                📥 Pobierz kartę
-            </button>
-        </div>
-
-        <div class="edit-mode-indicator" id="editModeIndicator">
-            Tryb edycji włączony - kliknij na tekst aby edytować
-        </div>
+<div class="carousel-container">
+    <div class="navigation">
+        <div class="nav-dot active" onclick="showCard(0)"></div>
+        <div class="nav-dot" onclick="showCard(1)"></div>
+        <div class="nav-dot" onclick="showCard(2)"></div>
+        <div class="nav-dot" onclick="showCard(3)"></div>
+        <div class="nav-dot" onclick="showCard(4)"></div>
+        <div class="nav-dot" onclick="showCard(5)"></div>
+        <div class="nav-dot" onclick="showCard(6)"></div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script>
-        let currentCard = 0;
-        const totalCards = 7;
-        let editMode = false;
+    <!--        THERE IS A PLACE WHERE DYNAMIC CARDS SHOULD BE INSERTED  -->
 
-        function showCard(index) {
-            // Hide all cards
-            const cards = document.querySelectorAll('.card');
-            const dots = document.querySelectorAll('.nav-dot');
 
-            cards.forEach(card => card.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
+<div class="controls">
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="previousCard()" disabled>← Poprzednia</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextCard()">Następna →</button>
+    </div>
+    <button class="edit-toggle-btn" id="editToggleBtn" onclick="toggleEditMode()">
+        ✏️ Edytuj tekst
+    </button>
+    <button class="download-btn" onclick="downloadCurrentCard()">
+        📥 Pobierz kartę
+    </button>
+</div>
 
-            // Show selected card
-            cards[index].classList.add('active');
-            dots[index].classList.add('active');
+<div class="edit-mode-indicator" id="editModeIndicator">
+    Tryb edycji włączony - kliknij na tekst aby edytować
+</div>
+</div>
 
-            currentCard = index;
-            updateNavButtons();
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    let currentCard = 0;
+    const totalCards = 7;
+    let editMode = false;
+
+    function showCard(index) {
+        // Hide all cards
+        const cards = document.querySelectorAll('.card');
+        const dots = document.querySelectorAll('.nav-dot');
+
+        cards.forEach(card => card.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        // Show selected card
+        cards[index].classList.add('active');
+        dots[index].classList.add('active');
+
+        currentCard = index;
+        updateNavButtons();
+    }
+
+    function nextCard() {
+        if (currentCard < totalCards - 1) {
+            showCard(currentCard + 1);
         }
+    }
 
-        function nextCard() {
-            if (currentCard < totalCards - 1) {
-                showCard(currentCard + 1);
-            }
+    function previousCard() {
+        if (currentCard > 0) {
+            showCard(currentCard - 1);
         }
+    }
 
-        function previousCard() {
-            if (currentCard > 0) {
-                showCard(currentCard - 1);
-            }
+    function updateNavButtons() {
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        prevBtn.disabled = currentCard === 0;
+        nextBtn.disabled = currentCard === totalCards - 1;
+    }
+
+    function toggleEditMode() {
+        editMode = !editMode;
+        const editToggleBtn = document.getElementById('editToggleBtn');
+        const editModeIndicator = document.getElementById('editModeIndicator');
+        const editableElements = document.querySelectorAll('.editable');
+
+        if (editMode) {
+            // Enable edit mode
+            editToggleBtn.textContent = '💾 Zakończ edycję';
+            editToggleBtn.classList.add('active');
+            editModeIndicator.classList.add('active');
+
+            editableElements.forEach(element => {
+                element.setAttribute('contenteditable', 'true');
+            });
+        } else {
+            // Disable edit mode
+            editToggleBtn.textContent = '✏️ Edytuj tekst';
+            editToggleBtn.classList.remove('active');
+            editModeIndicator.classList.remove('active');
+
+            editableElements.forEach(element => {
+                element.setAttribute('contenteditable', 'false');
+                element.blur(); // Remove focus
+            });
         }
+    }
 
-        function updateNavButtons() {
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
+    async function downloadCurrentCard() {
+        const activeCard = document.querySelector('.card.active');
+        const downloadBtn = document.querySelector('.download-btn');
 
-            prevBtn.disabled = currentCard === 0;
-            nextBtn.disabled = currentCard === totalCards - 1;
+        // Show loading state
+        downloadBtn.innerHTML = '⏳ Generowanie...';
+        downloadBtn.disabled = true;
+
+        try {
+             // Create a temporary wrapper with background padding
+             const wrapper = document.createElement('div');
+             wrapper.style.cssText = `
+                 background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                 padding: 60px;
+                 display: inline-block;
+                 border-radius: 0;
+                 min-width: 620px;
+                 min-height: 620px;
+                 box-sizing: border-box;
+             `;
+
+            // Clone the active card
+            const cardClone = activeCard.cloneNode(true);
+            cardClone.classList.add('active');
+            
+            // Ensure the cloned card has proper dimensions
+            cardClone.style.width = '500px';
+            cardClone.style.height = 'auto';
+            cardClone.style.minHeight = '500px';
+            cardClone.style.display = 'flex';
+            cardClone.style.flexDirection = 'column';
+
+            // Remove edit indicators from clone
+            const editableElements = cardClone.querySelectorAll('.editable');
+            editableElements.forEach(element => {
+                element.setAttribute('contenteditable', 'false');
+                element.style.backgroundColor = 'transparent';
+                element.style.outline = 'none';
+                element.style.border = 'none';
+            });
+
+            wrapper.appendChild(cardClone);
+
+            // Temporarily add to document (hidden)
+            wrapper.style.position = 'absolute';
+            wrapper.style.left = '-9999px';
+            wrapper.style.top = '-9999px';
+            document.body.appendChild(wrapper);
+
+            // Wait for layout to complete
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Get actual dimensions of the wrapper
+            const wrapperRect = wrapper.getBoundingClientRect();
+            
+            const canvas = await html2canvas(wrapper, {
+                backgroundColor: 'transparent',
+                scale: 2, // Higher quality
+                useCORS: true,
+                allowTaint: true,
+                width: wrapperRect.width,
+                height: wrapperRect.height,
+                scrollX: 0,
+                scrollY: 0,
+                logging: false,
+                onclone: function(clonedDoc) {
+                    // Ensure all styles are applied in the cloned document
+                    const clonedWrapper = clonedDoc.querySelector('div');
+                    if (clonedWrapper) {
+                        clonedWrapper.style.position = 'static';
+                        clonedWrapper.style.left = 'auto';
+                        clonedWrapper.style.top = 'auto';
+                    }
+                }
+            });
+
+            // Clean up temporary wrapper
+            document.body.removeChild(wrapper);
+
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `mental-strength-card-${currentCard + 1}.png`;
+            link.href = canvas.toDataURL('image/png');
+
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+        } catch (error) {
+            console.error('Error generating image:', error);
+            alert('Wystąpił błąd podczas generowania obrazu. Spróbuj ponownie.');
+        } finally {
+            // Reset button state
+            downloadBtn.innerHTML = '📥 Pobierz kartę';
+            downloadBtn.disabled = false;
         }
+    }
 
-        function toggleEditMode() {
-            editMode = !editMode;
-            const editToggleBtn = document.getElementById('editToggleBtn');
-            const editModeIndicator = document.getElementById('editModeIndicator');
-            const editableElements = document.querySelectorAll('.editable');
-
-            if (editMode) {
-                // Enable edit mode
-                editToggleBtn.textContent = '💾 Zakończ edycję';
-                editToggleBtn.classList.add('active');
-                editModeIndicator.classList.add('active');
-
-                editableElements.forEach(element => {
-                    element.setAttribute('contenteditable', 'true');
-                });
-            } else {
-                // Disable edit mode
-                editToggleBtn.textContent = '✏️ Edytuj tekst';
-                editToggleBtn.classList.remove('active');
-                editModeIndicator.classList.remove('active');
-
-                editableElements.forEach(element => {
-                    element.setAttribute('contenteditable', 'false');
-                    element.blur(); // Remove focus
-                });
-            }
+    // Keyboard navigation (only when not in edit mode)
+    document.addEventListener('keydown', function (event) {
+        if (!editMode) {
+            if (event.key === 'ArrowLeft') previousCard();
+            if (event.key === 'ArrowRight') nextCard();
         }
-
-        async function downloadCurrentCard() {
-            const activeCard = document.querySelector('.card.active');
-            const downloadBtn = document.querySelector('.download-btn');
-
-            // Show loading state
-            downloadBtn.innerHTML = '⏳ Generowanie...';
-            downloadBtn.disabled = true;
-
-            try {
-                // Create a temporary wrapper with background padding
-                const wrapper = document.createElement('div');
-                wrapper.style.cssText = `
-                    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-                    padding: 60px;
-                    display: inline-block;
-                    border-radius: 0;
-                `;
-
-                // Clone the active card
-                const cardClone = activeCard.cloneNode(true);
-                cardClone.classList.add('active');
-
-                // Remove edit indicators from clone
-                const editableElements = cardClone.querySelectorAll('.editable');
-                editableElements.forEach(element => {
-                    element.setAttribute('contenteditable', 'false');
-                    element.style.backgroundColor = 'transparent';
-                    element.style.outline = 'none';
-                });
-
-                wrapper.appendChild(cardClone);
-
-                // Temporarily add to document (hidden)
-                wrapper.style.position = 'absolute';
-                wrapper.style.left = '-9999px';
-                wrapper.style.top = '-9999px';
-                document.body.appendChild(wrapper);
-
-                const canvas = await html2canvas(wrapper, {
-                    backgroundColor: 'transparent',
-                    scale: 2, // Higher quality
-                    useCORS: true,
-                    allowTaint: true,
-                    width: 620, // 500 + (60*2) padding
-                    height: 620, // 500 + (60*2) padding
-                    scrollX: 0,
-                    scrollY: 0
-                });
-
-                // Clean up temporary wrapper
-                document.body.removeChild(wrapper);
-
-                // Create download link
-                const link = document.createElement('a');
-                link.download = `mental-strength-card-${currentCard + 1}.png`;
-                link.href = canvas.toDataURL('image/png');
-
-                // Trigger download
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-            } catch (error) {
-                console.error('Error generating image:', error);
-                alert('Wystąpił błąd podczas generowania obrazu. Spróbuj ponownie.');
-            } finally {
-                // Reset button state
-                downloadBtn.innerHTML = '📥 Pobierz kartę';
-                downloadBtn.disabled = false;
-            }
-        }
-
-        // Keyboard navigation (only when not in edit mode)
-        document.addEventListener('keydown', function(event) {
-            if (!editMode) {
-                if (event.key === 'ArrowLeft') previousCard();
-                if (event.key === 'ArrowRight') nextCard();
-            }
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
