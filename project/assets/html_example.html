@@ -52,10 +52,11 @@
             background: white;
             border-radius: 20px;
             width: 500px;
-            height: 500px;
+            min-height: 500px;
+            height: auto;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             display: none;
             flex-direction: column;
             padding: 40px;
@@ -68,13 +69,17 @@
 
         /* For cards without author section */
         .card .content {
-            height: 420px;
+            min-height: 420px;
+            height: auto;
+            flex: 1;
         }
 
         /* For cards with author section (first and last) */
         .card:first-of-type .content,
         .card:last-of-type .content {
-            height: 350px;
+            min-height: 350px;
+            height: auto;
+            flex: 1;
         }
 
         .card::after {
@@ -92,11 +97,13 @@
         .content {
             position: relative;
             z-index: 2;
-            height: 350px;
+            min-height: 350px;
+            height: auto;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            overflow: hidden;
+            overflow: visible;
+            flex: 1;
         }
 
         .header {
@@ -333,9 +340,9 @@
         @media (max-width: 600px) {
             .card {
                 width: 90vw;
-                height: 90vw;
+                min-height: 90vw;
+                height: auto;
                 max-width: 400px;
-                max-height: 400px;
                 padding: 35px 30px 30px 30px;
             }
 
@@ -488,6 +495,8 @@
                  border-radius: 0;
                  min-width: 620px;
                  min-height: 620px;
+                 width: auto;
+                 height: auto;
                  box-sizing: border-box;
              `;
 
@@ -501,6 +510,7 @@
             cardClone.style.minHeight = '500px';
             cardClone.style.display = 'flex';
             cardClone.style.flexDirection = 'column';
+            cardClone.style.overflow = 'visible';
 
             // Remove edit indicators from clone
             const editableElements = cardClone.querySelectorAll('.editable');
