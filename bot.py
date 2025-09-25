@@ -66,10 +66,10 @@ class CarouselBot:
         # Fallback to OpenAI GPT-5
         if openai_client:
             try:
-                logger.info("Attempting to generate content with OpenAI GPT-4o...")
+                logger.info("Attempting to generate content with OpenAI GPT-5...")
                 response = await openai_client.chat.completions.create(
                     model="gpt-5",
-                    max_tokens=2000,
+                    max_completion_tokens=2000,
                     messages=[{"role": "user", "content": prompt}],
                     response_format={"type": "json_object"}
                 )
@@ -706,7 +706,7 @@ if __name__ == "__main__":
     if ANTHROPIC_API_KEY:
         logger.info("Claude API key found - will use as primary")
     if OPENAI_API_KEY:
-        logger.info("OpenAI GPT-4o API key found - will use as fallback" if ANTHROPIC_API_KEY else "OpenAI GPT-4o API key found - will use as primary")
+        logger.info("OpenAI GPT-5 API key found - will use as fallback" if ANTHROPIC_API_KEY else "OpenAI GPT-5 API key found - will use as primary")
         
     bot = CarouselBot()
     bot.run()
