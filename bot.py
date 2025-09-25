@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Dict, Optional, List
 
 import aiofiles
+from openai.types import ResponseFormatJSONObject
+from openai.types.chat import completion_create_params, ChatCompletionUserMessageParam
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 from anthropic import AsyncAnthropic
@@ -69,12 +71,23 @@ class CarouselBot:
                 logger.info("Attempting to generate content with OpenAI GPT-5...")
                 response = await openai_client.chat.completions.create(
                     model="gpt-5",
-                    max_completion_tokens=2000,
-                    messages=[{"role": "user", "content": prompt}],
-                    response_format={"type": "json_object"}
+                    max_completion_tokens=4000,
+                    messages=[ChatCompletionUserMessageParam(role="user", content=prompt)],
+                    response_format=completion_create_params.ResponseFormatJSONObject(type="json_object"),
                 )
+                # Check if response was truncated
+                choice = response.choices[0]
+                if choice.finish_reason == 'length':
+                    logger.warning("OpenAI response was truncated due to length limit")
+                    raise Exception("Response was truncated. Please try with a shorter prompt or contact administrator.")
+                
+                content = choice.message.content
+                if not content or content.strip() == '':
+                    logger.error("OpenAI returned empty content")
+                    raise Exception("AI returned empty response. Please try again.")
+                
                 logger.info("OpenAI generation successful")
-                return response.choices[0].message.content
+                return content
             except Exception as e:
                 logger.error(f"OpenAI also failed: {e}")
                 raise Exception("Both Claude and OpenAI are unavailable. Please try again later.")
