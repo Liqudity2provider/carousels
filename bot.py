@@ -9,6 +9,7 @@ import aiofiles
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 from anthropic import AsyncAnthropic
+from openai import AsyncOpenAI
 from dotenv import load_dotenv
 import json
 from html_generator import HTMLCarouselGenerator
@@ -28,10 +29,12 @@ logger = logging.getLogger(__name__)
 # Configuration
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 BASE_URL = os.getenv('BASE_URL', 'https://your-app.railway.app')
 
-# Initialize Anthropic client
-anthropic_client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+# Initialize AI clients
+anthropic_client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
+openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 # User sessions storage (in production, use Redis or database)
 user_sessions: Dict[int, Dict] = {}
@@ -43,6 +46,41 @@ class CarouselBot:
         self.json_generator = JSONCarouselGenerator()
         self.cache = CarouselCache()
         self.setup_handlers()
+    
+    async def generate_with_ai(self, prompt: str) -> str:
+        """Generate content using AI with fallback mechanism"""
+        # Try Claude first
+        if anthropic_client:
+            try:
+                logger.info("Attempting to generate content with Claude...")
+                response = await anthropic_client.messages.create(
+                    model="claude-3-5-sonnet-20241022",
+                    max_tokens=2000,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                logger.info("Claude generation successful")
+                return response.content[0].text
+            except Exception as e:
+                logger.warning(f"Claude failed: {e}. Falling back to OpenAI...")
+        
+        # Fallback to OpenAI GPT-5
+        if openai_client:
+            try:
+                logger.info("Attempting to generate content with OpenAI GPT-4o...")
+                response = await openai_client.chat.completions.create(
+                    model="gpt-5",
+                    max_tokens=2000,
+                    messages=[{"role": "user", "content": prompt}],
+                    response_format={"type": "json_object"}
+                )
+                logger.info("OpenAI generation successful")
+                return response.choices[0].message.content
+            except Exception as e:
+                logger.error(f"OpenAI also failed: {e}")
+                raise Exception("Both Claude and OpenAI are unavailable. Please try again later.")
+        
+        # No API keys available
+        raise Exception("No AI API keys configured. Please contact the administrator.")
         
     def setup_handlers(self):
         """Setup bot command and callback handlers"""
@@ -194,17 +232,23 @@ Pamiętaj o:
 - Polskim języku
 - Zwróceniu TYLKO poprawnego JSON-a bez dodatkowych komentarzy
 
-Zwróć tylko poprawny JSON zgodny z szablonem.
+WAŻNE: Odpowiedz TYLKO w formacie JSON. Nie dodawaj żadnych dodatkowych tekstów, wyjaśnień ani formatowania markdown. Zwróć tylko czysty, poprawny JSON zgodny z szablonem.
 """
 
-            # Call Claude API
-            response = await anthropic_client.messages.create(
-                model="claude-3-5-sonnet-20241022",
-                max_tokens=2000,
-                messages=[{"role": "user", "content": full_prompt}]
-            )
+            # Generate content using AI with fallback
+            generated_content = await self.generate_with_ai(full_prompt)
             
-            generated_content = response.content[0].text
+            # Validate JSON format before proceeding
+            try:
+                # Test if it's valid JSON
+                json.loads(generated_content)
+            except json.JSONDecodeError as e:
+                logger.error(f"Invalid JSON received from AI: {e}")
+                logger.error(f"Raw content: {generated_content[:500]}...")
+                await loading_msg.edit_text(
+                    "❌ AI returned invalid format. Please try again or contact the administrator."
+                )
+                return
             
             # Store in session
             user_sessions[user_id].update({
@@ -365,18 +409,24 @@ Oto oryginalna treść karuzeli na temat "{topic}":
 Użytkownik poprosił o następujące modyfikacje:
 {modifications}
 
-Zmodyfikuj treść karuzeli zgodnie z uwagami użytkownika, zachowując oryginalny format i strukturę. 
-Zwróć tylko zmodyfikowaną treść bez dodatkowych komentarzy.
+Zmodyfikuj treść karuzeli zgodnie z uwagami użytkownika, zachowując oryginalny format JSON i strukturę. 
+WAŻNE: Odpowiedz TYLKO w formacie JSON. Nie dodawaj żadnych dodatkowych tekstów, wyjaśnień ani formatowania markdown. Zwróć tylko czysty, poprawny JSON zgodny z oryginalnym szablonem.
 """
 
-            # Call Claude API for modifications
-            response = await anthropic_client.messages.create(
-                model="claude-sonnet-4-20250514",
-                max_tokens=2000,
-                messages=[{"role": "user", "content": modification_prompt}]
-            )
+            # Generate modified content using AI with fallback
+            modified_content = await self.generate_with_ai(modification_prompt)
             
-            modified_content = response.content[0].text
+            # Validate JSON format before proceeding
+            try:
+                # Test if it's valid JSON
+                json.loads(modified_content)
+            except json.JSONDecodeError as e:
+                logger.error(f"Invalid JSON received from AI during modification: {e}")
+                logger.error(f"Raw content: {modified_content[:500]}...")
+                await loading_msg.edit_text(
+                    "❌ AI returned invalid format during modification. Please try again or contact the administrator."
+                )
+                return
             
             # Update session
             session.update({
@@ -645,9 +695,18 @@ Zwróć tylko zmodyfikowaną treść bez dodatkowych komentarzy.
         self.app.run_polling()
 
 if __name__ == "__main__":
-    if not TELEGRAM_TOKEN or not ANTHROPIC_API_KEY:
-        logger.error("Missing required environment variables: TELEGRAM_BOT_TOKEN or ANTHROPIC_API_KEY")
+    if not TELEGRAM_TOKEN:
+        logger.error("Missing required environment variable: TELEGRAM_BOT_TOKEN")
         exit(1)
+        
+    if not ANTHROPIC_API_KEY and not OPENAI_API_KEY:
+        logger.error("Missing AI API keys: Please provide either ANTHROPIC_API_KEY or OPENAI_API_KEY")
+        exit(1)
+        
+    if ANTHROPIC_API_KEY:
+        logger.info("Claude API key found - will use as primary")
+    if OPENAI_API_KEY:
+        logger.info("OpenAI GPT-4o API key found - will use as fallback" if ANTHROPIC_API_KEY else "OpenAI GPT-4o API key found - will use as primary")
         
     bot = CarouselBot()
     bot.run()
