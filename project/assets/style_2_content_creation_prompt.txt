@@ -4,28 +4,23 @@ Create a carousel post with the following structure in JSON format for a modern 
   "cards": [
     {
       "type": "hook",
-      "header": "TITLE FORMAT: [MAIN GOAL/TRANSFORMATION]<br>[TIME FRAME OR METHOD]",
-      "text": ""
+      "text": "TITLE FORMAT: [MAIN GOAL/TRANSFORMATION]<br>[TIME FRAME OR METHOD]"
     },
     {
       "type": "main",
-      "header": "Short descriptive title (max 1 sentence)",
-      "text": "1. [First step/principle]\n[Brief, concise explanation - 2-3 sentences max]\n\n2. [Second step/principle]\n[Brief explanation - 2-3 sentences max]\n\n🔑 [Optional key insight]"
+      "text": "1. [First step/principle title]\n[Brief, concise explanation - 2-3 sentences max]\n\n2. [Second step/principle title]\n[Brief explanation - 2-3 sentences max]\n\n🔑 [Optional key insight]"
     },
     {
       "type": "main", 
-      "header": "Another concise header",
-      "text": "3. [Third step/principle]\n[Brief explanation]\n\n4. [Fourth step/principle]\n[Brief explanation]\n\n💡 [Optional tip]"
+      "text": "3. [Third step/principle title]\n[Brief explanation]\n\n4. [Fourth step/principle title]\n[Brief explanation]\n\n💡 [Optional tip]"
     },
     {
       "type": "main",
-      "header": "Clear, actionable header",
-      "text": "5. [Fifth step/principle]\n[Brief explanation]\n\n6. [Sixth step/principle]\n[Brief explanation]\n\n⚠️ [Optional warning or note]"
+      "text": "5. [Fifth step/principle title]\n[Brief explanation]\n\n6. [Sixth step/principle title]\n[Brief explanation]\n\n⚠️ [Optional warning or note]"
     },
     {
       "type": "main",
-      "header": "Final implementation steps",
-      "text": "7. [Seventh step/principle]\n[Brief explanation]\n\n8. [Eighth step/principle]\n[Brief explanation]\n\n🎯 [Final actionable insight]"
+      "text": "7. [Seventh step/principle title]\n[Brief explanation]\n\n8. [Eighth step/principle title]\n[Brief explanation]\n\n🎯 [Final actionable insight]"
     }
   ]
 }
@@ -37,15 +32,17 @@ Each main card can contain 1-2 numbered points to maximize space efficiency.
 STYLE 2 SPECIFIC GUIDELINES:
 
 Title Card (First Card):
-- Use <br> tags for line breaks in the header to create visually appealing multi-line titles
+- Use <br> tags for line breaks in the text to create visually appealing multi-line titles
 - Focus on the main transformation or goal
 - Include time frame when relevant (e.g., "W 1 ROK", "W 30 DNI", "KROK PO KROKU")
 - Keep it inspiring and action-oriented
-- The text field should remain empty for the title card
+- No separate header field - everything goes in the text field
 
 Content Cards (Main Cards):
-- Each card MUST have a descriptive header (max 1 sentence, summarizes the card content)
-- Each card can contain 1-2 numbered points (combine when character count allows)
+- Each card starts with the first numbered point as the FIRST LINE of text
+- The first line of each numbered point should be treated as a heading (will be styled as h4)
+- Follow with explanation text that should be normal weight and smaller
+- Structure: "1. First point title\n[explanation]\n\n2. Second point title\n[explanation]"
 - Keep each point to 2-3 sentences maximum for conciseness
 - Use double line breaks (\n\n) to separate multiple points within a card
 - Include practical tips with emoji prefixes sparingly (🔑, 💡, ⚠️, 🎯)
@@ -59,7 +56,7 @@ Tone & Style:
 - Professional yet approachable
 
 Content Principles:
-- Headers: Short, descriptive titles that summarize what the card teaches
+- Each numbered point title should be concise but descriptive (will be styled as h4)
 - Each numbered point should be concise but actionable (2-3 sentences max)
 - Combine 2 related points per card when space allows
 - Focus on practical implementation over theory
@@ -67,7 +64,7 @@ Content Principles:
 - Prioritize clarity and immediate applicability
 
 Language Patterns:
-- Headers: Use clear, benefit-focused language: "Zbuduj podstawy", "Ustaw granice", "Zmień nawyki"
+- Numbered point titles: Use clear, benefit-focused language: "Zbuduj podstawy", "Ustaw granice", "Zmień nawyki"
 - Content: Start with action verbs: "Zacznij od...", "Ustaw...", "Stwórz..."
 - Keep explanations brief and direct
 - End points with concrete next steps or key insights

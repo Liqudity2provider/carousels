@@ -84,33 +84,61 @@
             line-height: 1.3;
         }
 
-        .section-text {
+        .section-title {
+            font-size: clamp(1.0em, 3.2cqmin, 1.4em);
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0 0 clamp(8px, 1.5cqmin, 20px) 0;
+            line-height: 1.3;
+        }
+
+        .section-content {
             font-size: clamp(0.85em, 2.2cqmin, 1.1em); /* Smaller than base font-size */
-            font-weight: 200 !important;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+            font-weight: 300;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: #34495e;
             margin: 0 0 clamp(12px, 2cqmin, 32px) 0;
             line-height: 1.5;
         }
 
-        .section-text * {
-            font-weight: 200 !important;
-            font-family: inherit !important;
+        .section-text {
+            font-size: clamp(0.85em, 2.2cqmin, 1.1em); /* Smaller than base font-size */
+            font-weight: 300;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #34495e;
+            margin: 0 0 clamp(12px, 2cqmin, 32px) 0;
+            line-height: 1.5;
         }
 
-        /* Ensure no bold styling anywhere in section text */
+        .section-content * {
+            font-weight: 300;
+            font-family: inherit;
+        }
+
+        .section-text * {
+            font-weight: 300;
+            font-family: inherit;
+        }
+
+        /* Ensure no bold styling anywhere in section content */
+        .section-content b,
+        .section-content strong,
         .section-text b,
         .section-text strong {
-            font-weight: normal !important;
+            font-weight: normal;
         }
 
         /* Additional override for any potential bold elements */
+        .card .section-content,
+        .card .section-content span,
+        .card .section-content div,
+        .card .section-content p,
         .card .section-text,
         .card .section-text span,
         .card .section-text div,
         .card .section-text p {
-            font-weight: 200 !important;
-            font-style: normal !important;
+            font-weight: 300;
+            font-style: normal;
         }
 
         .section {
@@ -270,52 +298,52 @@
 
         /* Disable animations during export for clean images */
         .exporting * {
-            animation: none !important;
-            transition: none !important;
+            animation: none;
+            transition: none;
         }
         
         /* Precise layout control for image generation */
         .exporting .card {
-            width: 1080px !important;
-            height: 1350px !important;
-            min-width: 1080px !important;
-            min-height: 1350px !important;
-            max-width: 1080px !important;
-            max-height: 1350px !important;
-            position: relative !important;
-            transform: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
-            background: #ffffff !important;
-            background-color: #ffffff !important;
-            background-image: none !important;
+            width: 1080px;
+            height: 1350px;
+            min-width: 1080px;
+            min-height: 1350px;
+            max-width: 1080px;
+            max-height: 1350px;
+            position: relative;
+            transform: none;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background: #ffffff;
+            background-color: #ffffff;
+            background-image: none;
         }
         
         .exporting .content {
-            width: 100% !important;
-            height: 100% !important;
-            box-sizing: border-box !important;
-            word-wrap: break-word !important;
-            overflow-wrap: break-word !important;
-            hyphens: auto !important;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
         
         .exporting .section-text {
-            line-height: 1.5 !important;
-            word-break: break-word !important;
-            overflow-wrap: break-word !important;
-            white-space: pre-wrap !important;
+            line-height: 1.5;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
         }
         
         .exporting .section-number {
-            line-height: 1.3 !important;
+            line-height: 1.3;
         }
         
         .exporting .card-header {
-            line-height: 1.3 !important;
-            word-break: break-word !important;
-            overflow-wrap: break-word !important;
+            line-height: 1.3;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Container query breakpoints for fine-tuning */
@@ -398,11 +426,15 @@
                 transform: card.style.transform,
                 transformOrigin: card.style.transformOrigin,
                 overflow: card.style.overflow,
-                boxSizing: card.style.boxSizing
+                boxSizing: card.style.boxSizing,
+                width: card.style.width,
+                height: card.style.height
             };
             
             try {
-                // Prepare card for precise capture
+                // Set card to exact target dimensions to maintain container query scaling
+                card.style.width = finalOptions.width + 'px';
+                card.style.height = finalOptions.height + 'px';
                 card.style.position = 'absolute';
                 card.style.left = '0px';
                 card.style.top = '0px';
@@ -411,8 +443,11 @@
                 card.style.overflow = 'hidden';
                 card.style.boxSizing = 'border-box';
                 
-                // Wait for layout to settle
-                await new Promise(resolve => setTimeout(resolve, 100));
+                // Force layout recalculation for container queries
+                card.offsetHeight; // Trigger reflow
+                
+                // Wait for layout to settle and container queries to recalculate
+                await new Promise(resolve => setTimeout(resolve, 200));
                 
                 // Try html2canvas first (better for layout consistency)
                 console.log('Trying html2canvas for precise layout...');
@@ -435,6 +470,17 @@
                         clonedDoc.body.style.backgroundColor = '#ffffff';
                         clonedDoc.body.style.background = '#ffffff';
                         
+                        // Find the cloned card and ensure it has the correct dimensions
+                        const clonedCard = clonedDoc.querySelector('.card');
+                        if (clonedCard) {
+                            // Maintain exact dimensions for container queries
+                            clonedCard.style.width = finalOptions.width + 'px';
+                            clonedCard.style.height = finalOptions.height + 'px';
+                            clonedCard.style.backgroundColor = '#ffffff';
+                            clonedCard.style.background = '#ffffff';
+                            clonedCard.style.backgroundImage = 'none';
+                        }
+                        
                         // Find all elements and force white background
                         const allElements = clonedDoc.querySelectorAll('*');
                         allElements.forEach(el => {
@@ -448,14 +494,6 @@
                                 }
                             }
                         });
-                        
-                        // Specifically target the main card element
-                        const clonedCard = clonedDoc.querySelector('div');
-                        if (clonedCard) {
-                            clonedCard.style.backgroundColor = '#ffffff';
-                            clonedCard.style.background = '#ffffff';
-                            clonedCard.style.backgroundImage = 'none';
-                        }
                     }
                 });
                 
@@ -664,21 +702,58 @@
                 }
                 
                 // Set explicit font sizes on clone elements
-                const cloneCardHeader = cardClone.querySelector('.card-header');
                 const cloneSectionNumbers = cardClone.querySelectorAll('.section-number');
                 const cloneSectionTexts = cardClone.querySelectorAll('.section-text');
                 
-                if (cloneCardHeader) {
-                    cloneCardHeader.style.fontSize = '56px';  // Increased for better visibility
-                    cloneCardHeader.style.lineHeight = '1.3';
-                }
                 cloneSectionNumbers.forEach(el => {
-                    el.style.fontSize = '48px';  // Increased for better visibility
+                    el.style.fontSize = '40px';  // Section numbers (1., 2., etc.)
                     el.style.lineHeight = '1.3';
                 });
-                cloneSectionTexts.forEach(el => {
-                    el.style.fontSize = '42px';  // Increased for better visibility
-                    el.style.lineHeight = '1.5';
+                
+                // Handle section titles and content separately
+                const cloneSections = cardClone.querySelectorAll('.section');
+                cloneSections.forEach(section => {
+                    const sectionText = section.querySelector('.section-text');
+                    const sectionTitle = section.querySelector('.section-title');
+                    const sectionContent = section.querySelector('.section-content');
+                    const sectionNumber = section.querySelector('.section-number');
+                    
+                    // Style section titles (h4)
+                    if (sectionTitle) {
+                        sectionTitle.style.fontSize = '62px';
+                        sectionTitle.style.fontWeight = '600';
+                        sectionTitle.style.lineHeight = '1.3';
+                        sectionTitle.style.color = '#2c3e50';
+                        sectionTitle.style.marginBottom = '12px';
+                        sectionTitle.style.marginTop = '0';
+                    }
+
+                    // Style section content
+                    if (sectionContent) {
+                        sectionContent.style.fontSize = '48px';
+                        sectionContent.style.fontWeight = '100';
+                        sectionContent.style.lineHeight = '1.5';
+                        sectionContent.style.color = '#34495e';
+                    }
+                    
+                    // Handle legacy section text (for backwards compatibility)
+                    if (sectionText && sectionText.innerHTML) {
+                        // Check if this is a header section (no section number, has <strong> tag)
+                        if (!sectionNumber || !sectionNumber.textContent.trim()) {
+                            // This is a small header section
+                            sectionText.style.fontSize = '444px';
+                            sectionText.style.fontWeight = '600';
+                            sectionText.style.lineHeight = '1.3';
+                            sectionText.style.color = '#2c3e50';
+                            sectionText.style.marginBottom = '16px';
+                        } else {
+                            // This is a regular content section
+                            sectionText.style.fontSize = '444px';
+                            sectionText.style.fontWeight = '300';
+                            sectionText.style.lineHeight = '1.5';
+                            sectionText.style.color = '#34495e';
+                        }
+                    }
                 });
                 
                 // Remove any controls from clone

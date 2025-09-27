@@ -475,11 +475,15 @@
                 transform: card.style.transform,
                 transformOrigin: card.style.transformOrigin,
                 overflow: card.style.overflow,
-                boxSizing: card.style.boxSizing
+                boxSizing: card.style.boxSizing,
+                width: card.style.width,
+                height: card.style.height
             };
             
             try {
-                // Prepare card for precise capture
+                // Set card to exact target dimensions to maintain container query scaling
+                card.style.width = finalOptions.width + 'px';
+                card.style.height = finalOptions.height + 'px';
                 card.style.position = 'absolute';
                 card.style.left = '0px';
                 card.style.top = '0px';
@@ -488,8 +492,11 @@
                 card.style.overflow = 'hidden';
                 card.style.boxSizing = 'border-box';
                 
-                // Wait for layout to settle
-                await new Promise(resolve => setTimeout(resolve, 100));
+                // Force layout recalculation for container queries
+                card.offsetHeight; // Trigger reflow
+                
+                // Wait for layout to settle and container queries to recalculate
+                await new Promise(resolve => setTimeout(resolve, 200));
                 
                 // Try html2canvas first (better for layout consistency)
                 console.log('Trying html2canvas for precise layout...');
@@ -511,6 +518,9 @@
                         // Ensure fonts are loaded and properly sized in cloned document
                         const clonedCard = clonedDoc.querySelector('.card');
                         if (clonedCard) {
+                            // Maintain exact dimensions for container queries
+                            clonedCard.style.width = finalOptions.width + 'px';
+                            clonedCard.style.height = finalOptions.height + 'px';
                             clonedCard.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
                             clonedCard.style.backgroundColor = '#ffffff';  // Force white background
                             // Force font loading

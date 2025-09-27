@@ -39,7 +39,7 @@ class JSONCarouselGeneratorStyle2:
         
         # Update page title
         if cards and cards[0]['type'] == 'hook':
-            title = cards[0]['header'].strip()
+            title = cards[0]['text'].strip()
             html = html.replace(
                 '<title>Life Goals Cards</title>',
                 f'<title>{title}</title>'
@@ -101,7 +101,7 @@ class JSONCarouselGeneratorStyle2:
             return ""
         
         # Handle the title with proper HTML formatting
-        title = card.get('header', '')
+        title = card.get('text', '')
         # The title might already have <br> tags from the AI, so we keep them as is
         filled_template = template.replace('{{TITLE}}', title)
         filled_template = filled_template.replace('id="card1"', f'id="{card_id}"')
@@ -113,27 +113,24 @@ class JSONCarouselGeneratorStyle2:
         if not template:
             return ""
         
-        # Get card header (use header field or empty if not provided)
-        card_header = card.get('header', '').strip()
-        
-        # Parse the card text into sections
+        # Parse the card text into sections (no separate header field)
         sections_html = self.generate_sections_from_text(card.get('text', ''), section_template)
         
-        filled_template = template.replace('{{CARD_HEADER}}', card_header)
-        filled_template = filled_template.replace('{{SECTIONS}}', sections_html)
+        filled_template = template.replace('{{SECTIONS}}', sections_html)
         filled_template = filled_template.replace('id="card2"', f'id="{card_id}"')
         
         return filled_template
     
     def generate_sections_from_text(self, text: str, section_template: str) -> str:
-        """Generate sections HTML from card text"""
+        """Generate sections HTML from card text with numbered points formatted as h4 + content"""
         if not text or not section_template:
             return ""
         
-        # Split text into paragraphs first (by double line breaks)
+        # Split text into paragraphs
         paragraphs = text.split('\n\n')
+        
         sections = []
-        current_section = {'number': '', 'text': []}
+        current_section = {'number': '', 'title': '', 'text': []}
         
         for paragraph in paragraphs:
             paragraph = paragraph.strip()
@@ -143,34 +140,68 @@ class JSONCarouselGeneratorStyle2:
             # Check if paragraph starts with a number (section header)
             if re.match(r'^\d+\.', paragraph):
                 # Save previous section if it exists
-                if current_section['number'] or current_section['text']:
+                if current_section['number'] or current_section['title'] or current_section['text']:
                     sections.append(current_section)
                 
+                # Parse the numbered section
+                lines = paragraph.split('\n')
+                first_line = lines[0].strip()  # "1. Title"
+                remaining_lines = lines[1:] if len(lines) > 1 else []
+                
+                # Extract number and title from first line
+                match = re.match(r'^(\d+\.\s*)(.*)', first_line)
+                if match:
+                    number = match.group(1)  # "1. "
+                    title = match.group(2)   # "Title"
+                else:
+                    number = first_line
+                    title = ''
+                
                 # Start new section
-                current_section = {'number': paragraph, 'text': []}
+                current_section = {
+                    'number': number,
+                    'title': title,
+                    'text': remaining_lines
+                }
             else:
                 # Add to current section text
                 current_section['text'].append(paragraph)
         
         # Add the last section
-        if current_section['number'] or current_section['text']:
+        if current_section['number'] or current_section['title'] or current_section['text']:
             sections.append(current_section)
+        
+        # If no numbered sections found, treat all content as one section
+        if not sections and text.strip():
+            sections = [{'number': '', 'title': '', 'text': [text.strip()]}]
         
         # Generate HTML for each section
         sections_html = []
+        
         for section in sections:
-            if section['number'] or section['text']:
-                section_html = section_template.replace('{{SECTION_NUMBER}}', section['number'])
-                # Convert text to HTML with proper line breaks
-                # First join paragraphs with double breaks, then handle single line breaks within paragraphs
-                processed_text = []
-                for text_part in section['text']:
-                    # Replace single line breaks within paragraphs with <br>
-                    processed_part = text_part.replace('\n', '<br>')
-                    processed_text.append(processed_part)
+            if section['number'] or section['title'] or section['text']:
+                # Create section text with title as h4 and content as normal text
+                section_content_parts = []
                 
-                section_text = '<br><br>'.join(processed_text)
-                section_html = section_html.replace('{{SECTION_TEXT}}', section_text)
+                # Add title as h4 if it exists
+                if section['title']:
+                    section_content_parts.append(f'<h4 class="section-title">{section["title"]}</h4>')
+                
+                # Add content text
+                if section['text']:
+                    processed_text = []
+                    for text_part in section['text']:
+                        # Replace single line breaks within paragraphs with <br>
+                        processed_part = text_part.replace('\n', '<br>')
+                        processed_text.append(processed_part)
+                    
+                    content_text = '<br><br>'.join(processed_text)
+                    if content_text:
+                        section_content_parts.append(f'<div class="section-content">{content_text}</div>')
+                
+                section_text = ''.join(section_content_parts)
+                
+                section_html = section_template.replace('{{SECTION_TEXT}}', section_text)
                 sections_html.append(section_html)
         
         return '\n\n'.join(sections_html)
@@ -184,11 +215,9 @@ class JSONCarouselGeneratorStyle2:
             display_text = []
             for i, card in enumerate(cards):
                 card_type = card.get('type', 'unknown').upper()
-                header = card.get('header', 'No Header')
                 text = card.get('text', 'No Text')
                 
                 display_text.append(f"--- Card {i+1} ({card_type}) ---")
-                display_text.append(f"Header: {header}")
                 display_text.append(f"Text:\n{text}\n")
                 
             return "\n".join(display_text)

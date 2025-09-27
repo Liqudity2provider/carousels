@@ -6,8 +6,8 @@ import aiofiles
 class HTMLCarouselGenerator:
     """Generate HTML carousels from content"""
     
-    def __init__(self, template_path: str = "project/assets/html_example.html", 
-                 cards_template_path: str = "project/assets/cards_html.html"):
+    def __init__(self, template_path: str = "project/assets/style_1/html_example.html", 
+                 cards_template_path: str = "project/assets/style_1/cards_html.html"):
         self.template_path = Path(template_path)
         self.cards_template_path = Path(cards_template_path)
     
