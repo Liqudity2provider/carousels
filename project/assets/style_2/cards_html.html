@@ -1,0 +1,89 @@
+<!-- First Card Template (Title Card with Illustration) -->
+<div class="card title-card" id="card1">
+    <div class="content">
+        <div class="header-text editable" contenteditable="false">
+            {{TITLE}}
+        </div>
+        
+        <div class="illustration">
+            <div class="mountain-scene">
+                <svg class="mountain-svg" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Sun -->
+                    <circle cx="250" cy="40" r="25" fill="none" stroke="#34495e" stroke-width="1.5"/>
+                    
+                    <!-- Horizon line -->
+                    <line x1="0" y1="120" x2="300" y2="120" stroke="#34495e" stroke-width="1"/>
+                    
+                    <!-- Mountain ranges -->
+                    <path d="M0 120 L60 80 L120 100 L180 60 L240 90 L300 70 L300 120 Z" 
+                          fill="none" stroke="#34495e" stroke-width="1.5"/>
+                    
+                    <!-- Main peak -->
+                    <path d="M120 120 L150 40 L180 120 Z" 
+                          fill="none" stroke="#34495e" stroke-width="2"/>
+                    
+                    <!-- Peak shading -->
+                    <path d="M150 40 L165 60 L150 80 L135 60 Z" 
+                          fill="none" stroke="#34495e" stroke-width="1" 
+                          stroke-dasharray="2,2"/>
+                    
+                    <!-- Victory figure on peak -->
+                    <g transform="translate(150, 30)">
+                        <!-- Head -->
+                        <circle cx="0" cy="0" r="3" fill="#34495e"/>
+                        <!-- Body -->
+                        <line x1="0" y1="3" x2="0" y2="15" stroke="#34495e" stroke-width="2"/>
+                        <!-- Arms raised -->
+                        <line x1="0" y1="8" x2="-8" y2="2" stroke="#34495e" stroke-width="2"/>
+                        <line x1="0" y1="8" x2="8" y2="2" stroke="#34495e" stroke-width="2"/>
+                        <!-- Legs -->
+                        <line x1="0" y1="15" x2="-5" y2="22" stroke="#34495e" stroke-width="2"/>
+                        <line x1="0" y1="15" x2="5" y2="22" stroke="#34495e" stroke-width="2"/>
+                    </g>
+                    
+                    <!-- Additional mountain details -->
+                    <path d="M80 120 L100 90 L120 110" 
+                          fill="none" stroke="#34495e" stroke-width="1"/>
+                    <path d="M200 120 L220 85 L240 115" 
+                          fill="none" stroke="#34495e" stroke-width="1"/>
+                          
+                    <!-- Water/ground lines -->
+                    <line x1="0" y1="130" x2="300" y2="130" stroke="#34495e" stroke-width="0.5" opacity="0.6"/>
+                    <line x1="0" y1="135" x2="300" y2="135" stroke="#34495e" stroke-width="0.5" opacity="0.4"/>
+                    <line x1="0" y1="140" x2="300" y2="140" stroke="#34495e" stroke-width="0.5" opacity="0.3"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <div class="author-section">
+        <div class="divider"></div>
+        <div class="author-name">
+            Daniel Tur
+            <span class="verified-icon">✓</span>
+        </div>
+        <div class="author-avatar"></div>
+    </div>
+</div>
+
+<!-- Content Card Template (For cards 2-10) -->
+<div class="card" id="card2">
+    <div class="content">
+        {{SECTIONS}}
+    </div>
+    
+    <div class="author-section">
+        <div class="divider"></div>
+        <div class="author-name">
+            Daniel Tur
+            <span class="verified-icon">✓</span>
+        </div>
+        <div class="author-avatar"></div>
+    </div>
+</div>
+
+<!-- Section Template (for content cards) -->
+<div class="section">
+    <div class="section-number editable" contenteditable="false">{{SECTION_NUMBER}}</div>
+    <div class="section-text editable" contenteditable="false">{{SECTION_TEXT}}</div>
+</div>

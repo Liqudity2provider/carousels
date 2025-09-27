@@ -1,0 +1,114 @@
+Create a carousel post with the following structure in JSON format for a modern grid layout:
+
+{
+  "cards": [
+    {
+      "type": "hook",
+      "header": "TITLE FORMAT: [MAIN GOAL/TRANSFORMATION]<br>[TIME FRAME OR METHOD]",
+      "text": ""
+    },
+    {
+      "type": "main",
+      "header": "",
+      "text": "1. [First step/principle]\n[Detailed explanation of this step - what it means, why it's important, how to implement it]\n\n[Optional: Key insight or practical tip with emoji prefix like 🔑]"
+    },
+    {
+      "type": "main", 
+      "header": "",
+      "text": "2. [Second step/principle]\n[Detailed explanation of this step]\n\n[Optional: Additional context or example]"
+    },
+    {
+      "type": "main",
+      "header": "",
+      "text": "3. [Third step/principle]\n[Detailed explanation]\n\n[Optional: Practical application or warning]"
+    },
+    {
+      "type": "main",
+      "header": "",
+      "text": "4. [Fourth step/principle]\n[Detailed explanation]\n\n[Optional: Motivational insight or next action]"
+    },
+    {
+      "type": "main",
+      "header": "",
+      "text": "5. [Fifth step/principle]\n[Detailed explanation]\n\n[Optional: Final tip or encouragement]"
+    }
+  ]
+}
+
+CARD COUNT FLEXIBILITY:
+The number of "main" cards can vary from 3 to 10, making the total number of cards between 4 and 11.
+
+STYLE 2 SPECIFIC GUIDELINES:
+
+Title Card (First Card):
+- Use <br> tags for line breaks in the header to create visually appealing multi-line titles
+- Focus on the main transformation or goal
+- Include time frame when relevant (e.g., "W 1 ROK", "W 30 DNI", "KROK PO KROKU")
+- Keep it inspiring and action-oriented
+- The text field should remain empty for the title card
+
+Content Cards (Main Cards):
+- Each card starts with a numbered point (1., 2., 3., etc.)
+- Follow the number with a clear, actionable principle or step
+- Provide detailed explanation in the next paragraph
+- Use double line breaks (\n\n) to separate sections within a card
+- Include practical tips with emoji prefixes when helpful (🔑, 💡, ⚠️, 🎯)
+
+WRITING GUIDELINES:
+
+Tone & Style:
+- Direct and actionable - use "ty" (you) form
+- Practical and implementable - focus on concrete steps
+- Motivational but realistic - acknowledge challenges
+- Professional yet approachable
+
+Content Principles:
+- Each numbered point should be a complete, actionable step
+- Provide enough detail for immediate implementation
+- Include why each step matters (the reasoning behind it)
+- Use specific examples when possible
+- Focus on transformation and growth
+
+Language Patterns:
+- Start sections with action verbs: "Zacznij od...", "Zmień...", "Stwórz...", "Przeanalizuj..."
+- Use questions to engage: "Która zmiana da mi największy efekt?"
+- Include practical frameworks: "Przeanalizuj 8 obszarów: zdrowie, finanse..."
+- End with actionable insights or next steps
+
+Formatting:
+- Use numbered lists (1., 2., 3.) for main points
+- Use 🔑 for key insights
+- Use 💡 for important realizations  
+- Use ⚠️ for warnings or things to avoid
+- Use 🎯 for specific actions or goals
+- Keep paragraphs concise and scannable
+
+CONTENT DISTRIBUTION STRATEGIES:
+
+For 4-6 Cards:
+Focus on the most essential steps
+Provide comprehensive explanations for each point
+Ideal for fundamental transformations
+
+For 7-9 Cards:
+Balanced mix of principles and practical steps
+Standard depth of explanation
+Good for most personal development topics
+
+For 10-11 Cards:
+Include detailed sub-steps and nuanced advice
+More comprehensive coverage
+Perfect for complex life changes or skill development
+
+Example Topics:
+- Life goal achievement and planning
+- Personal transformation processes
+- Skill development and mastery
+- Habit formation and change
+- Career advancement strategies
+- Relationship improvement
+- Health and wellness journeys
+- Financial planning and growth
+
+AUTHOR INFORMATION:
+Always use "Daniel Tur" as the author name with verified checkmark.
