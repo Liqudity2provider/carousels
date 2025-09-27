@@ -287,6 +287,9 @@
             margin: 0 !important;
             padding: 0 !important;
             box-sizing: border-box !important;
+            background: #ffffff !important;
+            background-color: #ffffff !important;
+            background-image: none !important;
         }
         
         .exporting .content {
@@ -428,16 +431,31 @@
                     letterRendering: true,          // Better text rendering
                     dpi: 300,                       // Higher DPI for better text quality
                     onclone: function(clonedDoc) {
-                        // Ensure fonts are loaded and properly sized in cloned document
-                        const clonedCard = clonedDoc.querySelector('.card');
-                        if (clonedCard) {
-                            clonedCard.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-                            clonedCard.style.backgroundColor = '#ffffff';  // Force white background
-                            // Force font loading
-                            clonedCard.style.fontDisplay = 'block';
-                        }
-                        // Also ensure body has white background
+                        // Ensure body and all elements have white background
                         clonedDoc.body.style.backgroundColor = '#ffffff';
+                        clonedDoc.body.style.background = '#ffffff';
+                        
+                        // Find all elements and force white background
+                        const allElements = clonedDoc.querySelectorAll('*');
+                        allElements.forEach(el => {
+                            if (el.style) {
+                                el.style.backgroundColor = el.style.backgroundColor || 'transparent';
+                                if (el.style.background && el.style.background.includes('gradient')) {
+                                    el.style.background = '#ffffff';
+                                }
+                                if (el.style.backgroundImage && el.style.backgroundImage !== 'none') {
+                                    el.style.backgroundImage = 'none';
+                                }
+                            }
+                        });
+                        
+                        // Specifically target the main card element
+                        const clonedCard = clonedDoc.querySelector('div');
+                        if (clonedCard) {
+                            clonedCard.style.backgroundColor = '#ffffff';
+                            clonedCard.style.background = '#ffffff';
+                            clonedCard.style.backgroundImage = 'none';
+                        }
                     }
                 });
                 
@@ -462,7 +480,9 @@
                             position: 'absolute',
                             left: '0px',
                             top: '0px',
-                            backgroundColor: '#ffffff'  // Force white background
+                            backgroundColor: '#ffffff',  // Force white background
+                            background: '#ffffff',       // Override any gradient backgrounds
+                            backgroundImage: 'none'      // Remove any background images
                         },
                         filter: (node) => {
                             return !node.classList?.contains('controls') && 
@@ -590,10 +610,10 @@
                 tempContainer.style.overflow = 'hidden';
                 document.body.appendChild(tempContainer);
                 
-                // Clone the card for rendering
-                const cardClone = card.cloneNode(true);
+                // Create a completely new card element with white background
+                const cardClone = document.createElement('div');
                 
-                // Apply exact styles to clone
+                // Apply exact styles to new card (no inherited CSS)
                 cardClone.style.width = '1080px';
                 cardClone.style.height = '1350px';
                 cardClone.style.minWidth = '1080px';
@@ -605,7 +625,43 @@
                 cardClone.style.margin = '0';
                 cardClone.style.padding = '0';
                 cardClone.style.boxSizing = 'border-box';
-                cardClone.style.backgroundColor = '#ffffff';  // Ensure white background
+                cardClone.style.backgroundColor = '#ffffff';
+                cardClone.style.background = '#ffffff';
+                cardClone.style.backgroundImage = 'none';
+                cardClone.style.borderRadius = '12px';
+                cardClone.style.display = 'grid';
+                cardClone.style.gridTemplateRows = '1fr auto';
+                cardClone.style.overflow = 'hidden';
+                cardClone.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+                
+                // Copy only the content from the original card
+                const originalContent = card.querySelector('.content');
+                const originalAuthor = card.querySelector('.author-section');
+                
+                if (originalContent) {
+                    const contentClone = originalContent.cloneNode(true);
+                    // Apply content styles inline
+                    contentClone.style.padding = '60px 45px 0';
+                    contentClone.style.overflow = 'hidden';
+                    contentClone.style.display = 'flex';
+                    contentClone.style.flexDirection = 'column';
+                    contentClone.style.gap = '25px';
+                    contentClone.style.fontSize = '32px';
+                    contentClone.style.lineHeight = '1.5';
+                    contentClone.style.color = '#2c3e50';
+                    contentClone.style.backgroundColor = 'transparent';
+                    cardClone.appendChild(contentClone);
+                }
+                if (originalAuthor) {
+                    const authorClone = originalAuthor.cloneNode(true);
+                    // Apply author styles inline
+                    authorClone.style.padding = '20px 45px 30px';
+                    authorClone.style.display = 'flex';
+                    authorClone.style.alignItems = 'center';
+                    authorClone.style.gap = '15px';
+                    authorClone.style.backgroundColor = 'transparent';
+                    cardClone.appendChild(authorClone);
+                }
                 
                 // Set explicit font sizes on clone elements
                 const cloneCardHeader = cardClone.querySelector('.card-header');
@@ -651,6 +707,33 @@
                     pixelRatio: 1  // Use 1:1 ratio to prevent scaling issues
                 });
                 
+                // Create a white canvas and composite the image on top to ensure white background
+                const canvas = document.createElement('canvas');
+                canvas.width = 1080;
+                canvas.height = 1350;
+                const ctx = canvas.getContext('2d');
+                
+                // Fill with white background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, 1080, 1350);
+                
+                // Load and draw the generated image on top
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0, 1080, 1350);
+                };
+                img.src = dataUrl;
+                
+                // Wait for image to load and get the final white-background image
+                await new Promise(resolve => {
+                    img.onload = function() {
+                        ctx.drawImage(img, 0, 0, 1080, 1350);
+                        resolve();
+                    };
+                });
+                
+                const finalDataUrl = canvas.toDataURL('image/png');
+                
                 // Clean up temporary container
                 document.body.removeChild(tempContainer);
 
@@ -670,7 +753,7 @@
                 // Create and trigger download
                 const link = document.createElement('a');
                 link.download = `life-goals-card-${cardNumber}.png`;
-                link.href = dataUrl;
+                link.href = finalDataUrl;
                 
                 document.body.appendChild(link);
                 link.click();
