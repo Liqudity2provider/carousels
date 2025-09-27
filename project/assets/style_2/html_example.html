@@ -414,7 +414,7 @@
                 // Try html2canvas first (better for layout consistency)
                 console.log('Trying html2canvas for precise layout...');
                 const canvas = await html2canvas(card, {
-                    backgroundColor: finalOptions.backgroundColor,
+                    backgroundColor: '#ffffff',     // Force white background
                     scale: finalOptions.pixelRatio,
                     useCORS: true,
                     allowTaint: true,
@@ -426,12 +426,18 @@
                     removeContainer: false,
                     foreignObjectRendering: false,  // Use DOM rendering for better text
                     letterRendering: true,          // Better text rendering
+                    dpi: 300,                       // Higher DPI for better text quality
                     onclone: function(clonedDoc) {
-                        // Ensure fonts are loaded in cloned document
+                        // Ensure fonts are loaded and properly sized in cloned document
                         const clonedCard = clonedDoc.querySelector('.card');
                         if (clonedCard) {
                             clonedCard.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+                            clonedCard.style.backgroundColor = '#ffffff';  // Force white background
+                            // Force font loading
+                            clonedCard.style.fontDisplay = 'block';
                         }
+                        // Also ensure body has white background
+                        clonedDoc.body.style.backgroundColor = '#ffffff';
                     }
                 });
                 
@@ -445,7 +451,7 @@
                     return await window.toPng(card, {
                         pixelRatio: finalOptions.pixelRatio,
                         cacheBust: true,
-                        backgroundColor: finalOptions.backgroundColor,
+                        backgroundColor: '#ffffff',  // Force white background
                         width: finalOptions.width,
                         height: finalOptions.height,
                         style: {
@@ -455,7 +461,8 @@
                             height: finalOptions.height + 'px',
                             position: 'absolute',
                             left: '0px',
-                            top: '0px'
+                            top: '0px',
+                            backgroundColor: '#ffffff'  // Force white background
                         },
                         filter: (node) => {
                             return !node.classList?.contains('controls') && 
@@ -598,6 +605,7 @@
                 cardClone.style.margin = '0';
                 cardClone.style.padding = '0';
                 cardClone.style.boxSizing = 'border-box';
+                cardClone.style.backgroundColor = '#ffffff';  // Ensure white background
                 
                 // Set explicit font sizes on clone elements
                 const cloneCardHeader = cardClone.querySelector('.card-header');
@@ -605,15 +613,15 @@
                 const cloneSectionTexts = cardClone.querySelectorAll('.section-text');
                 
                 if (cloneCardHeader) {
-                    cloneCardHeader.style.fontSize = '44px';
+                    cloneCardHeader.style.fontSize = '56px';  // Increased for better visibility
                     cloneCardHeader.style.lineHeight = '1.3';
                 }
                 cloneSectionNumbers.forEach(el => {
-                    el.style.fontSize = '36px';
+                    el.style.fontSize = '48px';  // Increased for better visibility
                     el.style.lineHeight = '1.3';
                 });
                 cloneSectionTexts.forEach(el => {
-                    el.style.fontSize = '32px';
+                    el.style.fontSize = '42px';  // Increased for better visibility
                     el.style.lineHeight = '1.5';
                 });
                 
@@ -635,12 +643,12 @@
                 // Wait for layout to settle
                 await new Promise(resolve => setTimeout(resolve, 300));
                 
-                // Generate image using the clone
+                // Generate image using the clone with higher quality settings
                 const dataUrl = await window.generateCardImage(cardClone, {
                     width: 1080,
                     height: 1350,
                     backgroundColor: '#ffffff',
-                    pixelRatio: 2
+                    pixelRatio: 1  // Use 1:1 ratio to prevent scaling issues
                 });
                 
                 // Clean up temporary container
