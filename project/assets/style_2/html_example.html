@@ -67,19 +67,50 @@
             margin: 0;
         }
 
-        .section-number {
-            font-size: clamp(1.2em, 3.8cqmin, 1.8em);
+        .card-header {
+            font-size: clamp(1.1em, 4.2cqmin, 1.6em);
             font-weight: 700;
             color: #2c3e50;
-            margin: 0 0 clamp(8px, 1.5cqmin, 24px) 0;
+            line-height: 1.3;
+            margin: 0 0 clamp(16px, 3cqmin, 32px) 0;
+            text-align: left;
+        }
+
+        .section-number {
+            font-size: clamp(1.0em, 3.2cqmin, 1.4em);
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0 0 clamp(6px, 1.2cqmin, 18px) 0;
             line-height: 1.3;
         }
 
         .section-text {
-            font-size: 1em; /* Inherits base font-size */
+            font-size: clamp(0.85em, 2.2cqmin, 1.1em); /* Smaller than base font-size */
+            font-weight: 200 !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
             color: #34495e;
             margin: 0 0 clamp(12px, 2cqmin, 32px) 0;
             line-height: 1.5;
+        }
+
+        .section-text * {
+            font-weight: 200 !important;
+            font-family: inherit !important;
+        }
+
+        /* Ensure no bold styling anywhere in section text */
+        .section-text b,
+        .section-text strong {
+            font-weight: normal !important;
+        }
+
+        /* Additional override for any potential bold elements */
+        .card .section-text,
+        .card .section-text span,
+        .card .section-text div,
+        .card .section-text p {
+            font-weight: 200 !important;
+            font-style: normal !important;
         }
 
         .section {
@@ -242,6 +273,47 @@
             animation: none !important;
             transition: none !important;
         }
+        
+        /* Precise layout control for image generation */
+        .exporting .card {
+            width: 1080px !important;
+            height: 1350px !important;
+            min-width: 1080px !important;
+            min-height: 1350px !important;
+            max-width: 1080px !important;
+            max-height: 1350px !important;
+            position: relative !important;
+            transform: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+        }
+        
+        .exporting .content {
+            width: 100% !important;
+            height: 100% !important;
+            box-sizing: border-box !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            hyphens: auto !important;
+        }
+        
+        .exporting .section-text {
+            line-height: 1.5 !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            white-space: pre-wrap !important;
+        }
+        
+        .exporting .section-number {
+            line-height: 1.3 !important;
+        }
+        
+        .exporting .card-header {
+            line-height: 1.3 !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+        }
 
         /* Container query breakpoints for fine-tuning */
         @container (min-width: 280px) {
@@ -298,10 +370,113 @@
         <!--        THERE IS A PLACE WHERE DYNAMIC CARDS SHOULD BE INSERTED  -->
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="module">
         // Import html-to-image from CDN
         import { toPng } from 'https://cdn.skypack.dev/html-to-image@1.11.11';
         window.toPng = toPng;
+        
+        // Create a more reliable image generation function with precise layout control
+        window.generateCardImage = async function(card, options = {}) {
+            const defaultOptions = {
+                width: 1080,
+                height: 1350,
+                backgroundColor: '#ffffff',
+                pixelRatio: 2  // Higher quality for better text rendering
+            };
+            
+            const finalOptions = { ...defaultOptions, ...options };
+            
+            // Store original styles
+            const originalStyles = {
+                position: card.style.position,
+                left: card.style.left,
+                top: card.style.top,
+                transform: card.style.transform,
+                transformOrigin: card.style.transformOrigin,
+                overflow: card.style.overflow,
+                boxSizing: card.style.boxSizing
+            };
+            
+            try {
+                // Prepare card for precise capture
+                card.style.position = 'absolute';
+                card.style.left = '0px';
+                card.style.top = '0px';
+                card.style.transform = 'none';
+                card.style.transformOrigin = 'top left';
+                card.style.overflow = 'hidden';
+                card.style.boxSizing = 'border-box';
+                
+                // Wait for layout to settle
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Try html2canvas first (better for layout consistency)
+                console.log('Trying html2canvas for precise layout...');
+                const canvas = await html2canvas(card, {
+                    backgroundColor: finalOptions.backgroundColor,
+                    scale: finalOptions.pixelRatio,
+                    useCORS: true,
+                    allowTaint: true,
+                    width: finalOptions.width,
+                    height: finalOptions.height,
+                    scrollX: 0,
+                    scrollY: 0,
+                    logging: false,
+                    removeContainer: false,
+                    foreignObjectRendering: false,  // Use DOM rendering for better text
+                    letterRendering: true,          // Better text rendering
+                    onclone: function(clonedDoc) {
+                        // Ensure fonts are loaded in cloned document
+                        const clonedCard = clonedDoc.querySelector('.card');
+                        if (clonedCard) {
+                            clonedCard.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+                        }
+                    }
+                });
+                
+                return canvas.toDataURL('image/png');
+                
+            } catch (error) {
+                console.log('html2canvas failed, trying html-to-image...', error);
+                
+                // Fallback to html-to-image
+                try {
+                    return await window.toPng(card, {
+                        pixelRatio: finalOptions.pixelRatio,
+                        cacheBust: true,
+                        backgroundColor: finalOptions.backgroundColor,
+                        width: finalOptions.width,
+                        height: finalOptions.height,
+                        style: {
+                            transform: 'none',
+                            transformOrigin: 'top left',
+                            width: finalOptions.width + 'px',
+                            height: finalOptions.height + 'px',
+                            position: 'absolute',
+                            left: '0px',
+                            top: '0px'
+                        },
+                        filter: (node) => {
+                            return !node.classList?.contains('controls') && 
+                                   !node.classList?.contains('edit-mode-indicator');
+                        }
+                    });
+                } catch (fallbackError) {
+                    console.error('Both libraries failed:', fallbackError);
+                    throw fallbackError;
+                }
+            } finally {
+                // Restore original styles
+                Object.keys(originalStyles).forEach(key => {
+                    if (originalStyles[key] !== undefined) {
+                        card.style[key] = originalStyles[key];
+                    } else {
+                        card.style.removeProperty(key);
+                    }
+                });
+            }
+        };
     </script>
     <script>
         let editMode = false;
@@ -372,18 +547,104 @@
                     element.style.border = 'none';
                 });
 
-                // Generate image using html-to-image
-                const dataUrl = await window.toPng(card, {
-                    pixelRatio: 2,                    // High quality 2x resolution
-                    cacheBust: true,                  // Avoid stale images
-                    backgroundColor: '#ffffff',       // White background
-                    width: 1080,                      // Instagram standard width
-                    height: 1350,                     // Instagram standard height
-                    style: {
-                        transform: 'scale(1)',        // Ensure no scaling issues
-                        transformOrigin: 'top left'
-                    }
+                // Ensure card has proper dimensions before capture
+                const originalWidth = card.style.width;
+                const originalHeight = card.style.height;
+                
+                // Temporarily set exact dimensions
+                // card.style.width = '1080px';
+                // card.style.height = '1350px';
+                // card.style.minWidth = '1080px';
+                // card.style.minHeight = '1350px';
+                // card.style.maxWidth = '1080px';
+                // card.style.maxHeight = '1350px';
+                
+                // Force explicit font sizes for consistent rendering
+                const cardHeader = card.querySelector('.card-header');
+                const sectionNumbers = card.querySelectorAll('.section-number');
+                const sectionTexts = card.querySelectorAll('.section-text');
+                
+                // Store original styles
+                const originalStyles = {
+                    cardHeader: cardHeader ? cardHeader.style.fontSize : '',
+                    sectionNumbers: Array.from(sectionNumbers).map(el => el.style.fontSize),
+                    sectionTexts: Array.from(sectionTexts).map(el => el.style.fontSize)
+                };
+                
+                // Create a temporary container for precise rendering
+                const tempContainer = document.createElement('div');
+                tempContainer.style.position = 'fixed';
+                tempContainer.style.left = '-9999px';
+                tempContainer.style.top = '0';
+                tempContainer.style.width = '1080px';
+                tempContainer.style.height = '1350px';
+                tempContainer.style.zIndex = '-1';
+                tempContainer.style.backgroundColor = '#ffffff';
+                tempContainer.style.overflow = 'hidden';
+                document.body.appendChild(tempContainer);
+                
+                // Clone the card for rendering
+                const cardClone = card.cloneNode(true);
+                
+                // Apply exact styles to clone
+                cardClone.style.width = '1080px';
+                cardClone.style.height = '1350px';
+                cardClone.style.minWidth = '1080px';
+                cardClone.style.minHeight = '1350px';
+                cardClone.style.maxWidth = '1080px';
+                cardClone.style.maxHeight = '1350px';
+                cardClone.style.position = 'relative';
+                cardClone.style.transform = 'none';
+                cardClone.style.margin = '0';
+                cardClone.style.padding = '0';
+                cardClone.style.boxSizing = 'border-box';
+                
+                // Set explicit font sizes on clone elements
+                const cloneCardHeader = cardClone.querySelector('.card-header');
+                const cloneSectionNumbers = cardClone.querySelectorAll('.section-number');
+                const cloneSectionTexts = cardClone.querySelectorAll('.section-text');
+                
+                if (cloneCardHeader) {
+                    cloneCardHeader.style.fontSize = '44px';
+                    cloneCardHeader.style.lineHeight = '1.3';
+                }
+                cloneSectionNumbers.forEach(el => {
+                    el.style.fontSize = '36px';
+                    el.style.lineHeight = '1.3';
                 });
+                cloneSectionTexts.forEach(el => {
+                    el.style.fontSize = '32px';
+                    el.style.lineHeight = '1.5';
+                });
+                
+                // Remove any controls from clone
+                const controls = cardClone.querySelectorAll('.controls, .edit-mode-indicator');
+                controls.forEach(control => control.remove());
+                
+                // Make all editable elements non-editable in clone
+                const cloneEditables = cardClone.querySelectorAll('.editable');
+                cloneEditables.forEach(el => {
+                    el.contentEditable = 'false';
+                    el.style.outline = 'none';
+                    el.style.border = 'none';
+                    el.style.backgroundColor = 'transparent';
+                });
+                
+                tempContainer.appendChild(cardClone);
+                
+                // Wait for layout to settle
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                // Generate image using the clone
+                const dataUrl = await window.generateCardImage(cardClone, {
+                    width: 1080,
+                    height: 1350,
+                    backgroundColor: '#ffffff',
+                    pixelRatio: 2
+                });
+                
+                // Clean up temporary container
+                document.body.removeChild(tempContainer);
 
                 // Restore original states
                 editableElements.forEach((element, index) => {

@@ -113,10 +113,14 @@ class JSONCarouselGeneratorStyle2:
         if not template:
             return ""
         
+        # Get card header (use header field or empty if not provided)
+        card_header = card.get('header', '').strip()
+        
         # Parse the card text into sections
         sections_html = self.generate_sections_from_text(card.get('text', ''), section_template)
         
-        filled_template = template.replace('{{SECTIONS}}', sections_html)
+        filled_template = template.replace('{{CARD_HEADER}}', card_header)
+        filled_template = filled_template.replace('{{SECTIONS}}', sections_html)
         filled_template = filled_template.replace('id="card2"', f'id="{card_id}"')
         
         return filled_template

@@ -9,34 +9,30 @@ Create a carousel post with the following structure in JSON format for a modern 
     },
     {
       "type": "main",
-      "header": "",
-      "text": "1. [First step/principle]\n[Detailed explanation of this step - what it means, why it's important, how to implement it]\n\n[Optional: Key insight or practical tip with emoji prefix like 🔑]"
+      "header": "Short descriptive title (max 1 sentence)",
+      "text": "1. [First step/principle]\n[Brief, concise explanation - 2-3 sentences max]\n\n2. [Second step/principle]\n[Brief explanation - 2-3 sentences max]\n\n🔑 [Optional key insight]"
     },
     {
       "type": "main", 
-      "header": "",
-      "text": "2. [Second step/principle]\n[Detailed explanation of this step]\n\n[Optional: Additional context or example]"
+      "header": "Another concise header",
+      "text": "3. [Third step/principle]\n[Brief explanation]\n\n4. [Fourth step/principle]\n[Brief explanation]\n\n💡 [Optional tip]"
     },
     {
       "type": "main",
-      "header": "",
-      "text": "3. [Third step/principle]\n[Detailed explanation]\n\n[Optional: Practical application or warning]"
+      "header": "Clear, actionable header",
+      "text": "5. [Fifth step/principle]\n[Brief explanation]\n\n6. [Sixth step/principle]\n[Brief explanation]\n\n⚠️ [Optional warning or note]"
     },
     {
       "type": "main",
-      "header": "",
-      "text": "4. [Fourth step/principle]\n[Detailed explanation]\n\n[Optional: Motivational insight or next action]"
-    },
-    {
-      "type": "main",
-      "header": "",
-      "text": "5. [Fifth step/principle]\n[Detailed explanation]\n\n[Optional: Final tip or encouragement]"
+      "header": "Final implementation steps",
+      "text": "7. [Seventh step/principle]\n[Brief explanation]\n\n8. [Eighth step/principle]\n[Brief explanation]\n\n🎯 [Final actionable insight]"
     }
   ]
 }
 
 CARD COUNT FLEXIBILITY:
-The number of "main" cards can vary from 3 to 10, making the total number of cards between 4 and 11.
+The number of "main" cards can vary from 3 to 6, making the total number of cards between 4 and 7.
+Each main card can contain 1-2 numbered points to maximize space efficiency.
 
 STYLE 2 SPECIFIC GUIDELINES:
 
@@ -48,11 +44,11 @@ Title Card (First Card):
 - The text field should remain empty for the title card
 
 Content Cards (Main Cards):
-- Each card starts with a numbered point (1., 2., 3., etc.)
-- Follow the number with a clear, actionable principle or step
-- Provide detailed explanation in the next paragraph
-- Use double line breaks (\n\n) to separate sections within a card
-- Include practical tips with emoji prefixes when helpful (🔑, 💡, ⚠️, 🎯)
+- Each card MUST have a descriptive header (max 1 sentence, summarizes the card content)
+- Each card can contain 1-2 numbered points (combine when character count allows)
+- Keep each point to 2-3 sentences maximum for conciseness
+- Use double line breaks (\n\n) to separate multiple points within a card
+- Include practical tips with emoji prefixes sparingly (🔑, 💡, ⚠️, 🎯)
 
 WRITING GUIDELINES:
 
@@ -63,17 +59,18 @@ Tone & Style:
 - Professional yet approachable
 
 Content Principles:
-- Each numbered point should be a complete, actionable step
-- Provide enough detail for immediate implementation
-- Include why each step matters (the reasoning behind it)
-- Use specific examples when possible
-- Focus on transformation and growth
+- Headers: Short, descriptive titles that summarize what the card teaches
+- Each numbered point should be concise but actionable (2-3 sentences max)
+- Combine 2 related points per card when space allows
+- Focus on practical implementation over theory
+- Use specific, relatable examples briefly
+- Prioritize clarity and immediate applicability
 
 Language Patterns:
-- Start sections with action verbs: "Zacznij od...", "Zmień...", "Stwórz...", "Przeanalizuj..."
-- Use questions to engage: "Która zmiana da mi największy efekt?"
-- Include practical frameworks: "Przeanalizuj 8 obszarów: zdrowie, finanse..."
-- End with actionable insights or next steps
+- Headers: Use clear, benefit-focused language: "Zbuduj podstawy", "Ustaw granice", "Zmień nawyki"
+- Content: Start with action verbs: "Zacznij od...", "Ustaw...", "Stwórz..."
+- Keep explanations brief and direct
+- End points with concrete next steps or key insights
 
 Formatting:
 - Use numbered lists (1., 2., 3.) for main points

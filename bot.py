@@ -97,55 +97,55 @@ class CarouselBot:
         """Generate content using AI with fallback mechanism"""
         # Try Claude first
         import json
-        return  json.dumps({
-  "cards": [
-    {
-      "type": "hook",
-      "header": "Oznaki, że naprawdę dbasz o siebie<br>KROK PO KROKU",
-      "text": ""
-    },
-    {
-      "type": "main",
-      "header": "",
-      "text": "1. Zacznij słuchać sygnałów ciała\nKiedyś ignorowałeś zmęczenie i napięcie, teraz robisz szybkie check-iny: energia (1–5), napięcie w ciele, oddech. Ustaw 3 krótkie przypomnienia dziennie (rano, po pracy, przed snem) i zrób 2 min oddechu + zapisz jedną obserwację.\n\n🔑 Jeśli nie mierzysz, zgadujesz: przez 7 dni notuj „sen / energia / nastrój” w skali 1–5."
-    },
-    {
-      "type": "main",
-      "header": "",
-      "text": "2. Ustal granice bez poczucia winy\nKiedyś brałeś wszystko na siebie i wyjaśniałeś się każdemu. Teraz masz proste „nie” i 3 nieprzekraczalne zasady (np. brak maili po 19, sen po 23, wolne niedziele). Użyj skryptu: „Dzięki za zaproszenie, tym razem nie dam rady”.\n\n⚠️ Granice nie wymagają długich tłumaczeń. Krótkie i uprzejme „nie” to pełna odpowiedź."
-    },
-    {
-      "type": "main",
-      "header": "",
-      "text": "3. Zadbaj o fundamenty: sen, jedzenie, ruch\nKiedyś „kawa na śniadanie” i „od poniedziałku zaczynam”. Teraz trzymasz się mikro-rutyn: światło gaśnie o 22:30, 3 posiłki z białkiem, 7–8 tys. kroków dziennie. Fundamenty dają 80% efektów przy 20% wysiłku.\n\n🎯 Ustal minimalny standard: 10-min spacer, 1 owoc dziennie, w łóżku do 23:00 – nawet w gorsze dni."
-    },
-    {
-      "type": "main",
-      "header": "",
-      "text": "4. Reguluj emocje zamiast je tłumić\nKiedyś zagłuszałeś napięcie scrollowaniem lub jedzeniem. Teraz używasz STOP: S – Stop, T – Weź 3 oddechy 4–4–6, O – Obserwuj (co myślę/czuję?), P – Podejmij mały ruch (szklanka wody, krótki spacer). Dodaj 5 zdań dziennie w dzienniku: „Co czuję? Czego potrzebuję?”.\n\n💡 Emocje to dane, nie rozkazy. Gdy je nazwiesz, tracą moc sterowania tobą."
-    },
-    {
-      "type": "main",
-      "header": "",
-      "text": "5. Ogarnij finanse jak element self-care\nKiedyś zakupy „na poprawę humoru”. Teraz plan: tygodniowy budżet, reguła 50/30/20 i poduszka 3 mies. kosztów. Ustaw automatyczny przelew oszczędności w dniu wypłaty – zanim wydasz.\n\n🔑 Stwórz konto „przyjemności” (5–10%): możesz wydawać bez poczucia winy i bez rozwalania budżetu."
-    },
-    {
-      "type": "main",
-      "header": "",
-      "text": "6. Kuruj swoje relacje\nKiedyś trzymałeś się ludzi, którzy drenowali energię. Teraz robisz audyt: + dodaje, – zabiera. Przesuń czas do „+”, ustaw limit na „–”. Zaplanuj 1 wspierające spotkanie w tygodniu (spacer/kawa) z osobą, po której czujesz się lepiej.\n\n⚠️ Bliskość ≠ dostępność 24/7. Twoje granice chronią też dobre relacje."
-    },
-    {
-      "type": "main",
-      "header": "",
-      "text": "7. Wprowadź higienę cyfrową\nKiedyś telefon był pierwszą i ostatnią rzeczą dnia. Teraz masz zasady: brak telefonu w sypialni, limit social 30 min, tryb skali szarości w tygodniu. Zamień bezmyślne scrollowanie na 15 min czytania lub rozciągania.\n\n🎯 Odłóż telefon do „stacji dokującej” przy drzwiach i używaj zwykłego budzika."
-    },
-    {
-      "type": "main",
-      "header": "",
-      "text": "8. Zmień sposób, w jaki mówisz do siebie\nKiedyś: „znowu zawaliłem”. Teraz: „uczysz się; co następnym razem zrobisz inaczej?”. Użyj ramki: „Widzę, że [fakt]. To ma sens, bo [powód]. Następnym razem spróbuję [konkret].” Przyklej tę ramkę przy monitorze i stosuj codziennie.\n\n💡 Która zmiana da ci dziś największy efekt? Wybierz jedną i zrób ją w wersji „minimalnej”.\n\n— Daniel Tur ✅"
-    }
-  ]
-})
+#         return  json.dumps({
+#   "cards": [
+#     {
+#       "type": "hook",
+#       "header": "Oznaki, że naprawdę dbasz o siebie<br>KROK PO KROKU",
+#       "text": ""
+#     },
+#     {
+#       "type": "main",
+#       "header": "",
+#       "text": "1. Zacznij słuchać sygnałów ciała\nKiedyś ignorowałeś zmęczenie i napięcie, teraz robisz szybkie check-iny: energia (1–5), napięcie w ciele, oddech. Ustaw 3 krótkie przypomnienia dziennie (rano, po pracy, przed snem) i zrób 2 min oddechu + zapisz jedną obserwację.\n\n🔑 Jeśli nie mierzysz, zgadujesz: przez 7 dni notuj „sen / energia / nastrój” w skali 1–5."
+#     },
+#     {
+#       "type": "main",
+#       "header": "",
+#       "text": "2. Ustal granice bez poczucia winy\nKiedyś brałeś wszystko na siebie i wyjaśniałeś się każdemu. Teraz masz proste „nie” i 3 nieprzekraczalne zasady (np. brak maili po 19, sen po 23, wolne niedziele). Użyj skryptu: „Dzięki za zaproszenie, tym razem nie dam rady”.\n\n⚠️ Granice nie wymagają długich tłumaczeń. Krótkie i uprzejme „nie” to pełna odpowiedź."
+#     },
+#     {
+#       "type": "main",
+#       "header": "",
+#       "text": "3. Zadbaj o fundamenty: sen, jedzenie, ruch\nKiedyś „kawa na śniadanie” i „od poniedziałku zaczynam”. Teraz trzymasz się mikro-rutyn: światło gaśnie o 22:30, 3 posiłki z białkiem, 7–8 tys. kroków dziennie. Fundamenty dają 80% efektów przy 20% wysiłku.\n\n🎯 Ustal minimalny standard: 10-min spacer, 1 owoc dziennie, w łóżku do 23:00 – nawet w gorsze dni."
+#     },
+#     {
+#       "type": "main",
+#       "header": "",
+#       "text": "4. Reguluj emocje zamiast je tłumić\nKiedyś zagłuszałeś napięcie scrollowaniem lub jedzeniem. Teraz używasz STOP: S – Stop, T – Weź 3 oddechy 4–4–6, O – Obserwuj (co myślę/czuję?), P – Podejmij mały ruch (szklanka wody, krótki spacer). Dodaj 5 zdań dziennie w dzienniku: „Co czuję? Czego potrzebuję?”.\n\n💡 Emocje to dane, nie rozkazy. Gdy je nazwiesz, tracą moc sterowania tobą."
+#     },
+#     {
+#       "type": "main",
+#       "header": "",
+#       "text": "5. Ogarnij finanse jak element self-care\nKiedyś zakupy „na poprawę humoru”. Teraz plan: tygodniowy budżet, reguła 50/30/20 i poduszka 3 mies. kosztów. Ustaw automatyczny przelew oszczędności w dniu wypłaty – zanim wydasz.\n\n🔑 Stwórz konto „przyjemności” (5–10%): możesz wydawać bez poczucia winy i bez rozwalania budżetu."
+#     },
+#     {
+#       "type": "main",
+#       "header": "",
+#       "text": "6. Kuruj swoje relacje\nKiedyś trzymałeś się ludzi, którzy drenowali energię. Teraz robisz audyt: + dodaje, – zabiera. Przesuń czas do „+”, ustaw limit na „–”. Zaplanuj 1 wspierające spotkanie w tygodniu (spacer/kawa) z osobą, po której czujesz się lepiej.\n\n⚠️ Bliskość ≠ dostępność 24/7. Twoje granice chronią też dobre relacje."
+#     },
+#     {
+#       "type": "main",
+#       "header": "",
+#       "text": "7. Wprowadź higienę cyfrową\nKiedyś telefon był pierwszą i ostatnią rzeczą dnia. Teraz masz zasady: brak telefonu w sypialni, limit social 30 min, tryb skali szarości w tygodniu. Zamień bezmyślne scrollowanie na 15 min czytania lub rozciągania.\n\n🎯 Odłóż telefon do „stacji dokującej” przy drzwiach i używaj zwykłego budzika."
+#     },
+#     {
+#       "type": "main",
+#       "header": "",
+#       "text": "8. Zmień sposób, w jaki mówisz do siebie\nKiedyś: „znowu zawaliłem”. Teraz: „uczysz się; co następnym razem zrobisz inaczej?”. Użyj ramki: „Widzę, że [fakt]. To ma sens, bo [powód]. Następnym razem spróbuję [konkret].” Przyklej tę ramkę przy monitorze i stosuj codziennie.\n\n💡 Która zmiana da ci dziś największy efekt? Wybierz jedną i zrób ją w wersji „minimalnej”.\n\n— Daniel Tur ✅"
+#     }
+#   ]
+# })
         if anthropic_client:
             try:
                 logger.info("Attempting to generate content with Claude...")
@@ -267,32 +267,34 @@ class CarouselBot:
             
             # This is a content generation prompt, create a shorter version
             shorter_prompt = f"""
-Create a carousel post in JSON format with 5-7 cards maximum. Keep content concise but meaningful.
+Create a carousel post in JSON format with 4-6 cards maximum. Keep content concise but meaningful.
 
 Structure:
 {{
   "cards": [
     {{
       "type": "hook",
-      "header": "ENGAGING TITLE",
+      "header": "ENGAGING TITLE<br>SUBTITLE",
       "text": ""
     }},
     {{
       "type": "main", 
-      "header": "",
-      "text": "1. First key point with brief explanation"
+      "header": "Short descriptive header",
+      "text": "1. First key point (2-3 sentences max)\\n\\n2. Second key point (2-3 sentences max)\\n\\n🔑 Key insight"
     }},
-    // ... 3-5 more main cards with numbered points
+    // ... 2-4 more main cards with headers and 1-2 numbered points each
   ]
 }}
 
 Requirements:
 - Write in Polish
 - Use "ty" (you) form
-- Keep each card text under 200 characters
-- Focus on the most important points only
+- Each main card MUST have a descriptive header (max 1 sentence)
+- Combine 2 points per card when space allows
+- Keep each point to 2-3 sentences maximum
+- Focus on the most important, actionable advice
 - Ensure valid JSON format
-- Maximum 7 cards total
+- Maximum 6 cards total
 
 Topic: {topic_part}
 
