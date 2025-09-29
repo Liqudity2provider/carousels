@@ -1557,9 +1557,9 @@ Focus on symbols like: paths, bridges, mountains, trees growing, doors opening, 
             if svg_start != -1:
                 svg_end = html_content.find('</div>', svg_start) + 6
                 if svg_end > svg_start:
-                    # Replace the mountain SVG with custom image
+                    # Replace the mountain SVG with custom image using object-fit: contain to preserve proportions
                     custom_image_html = f'''<div class="mountain-scene">
-                        <img src="{image_url}" alt="Custom slide image" style="width: 100%; height: 100%; object-fit: cover; border-radius: clamp(8px, 2cqmin, 16px);">
+                        <img src="{image_url}" alt="Custom slide image" style="width: 100%; height: 100%; object-fit: contain; object-position: center; border-radius: clamp(8px, 2cqmin, 16px);">
                     </div>'''
                     html_content = html_content[:svg_start] + custom_image_html + html_content[svg_end:]
         else:

@@ -439,11 +439,23 @@
                         section.style.setProperty('margin-bottom', '60px', 'important');
                     });
                     
-                    // Mountain illustration
+                    // Mountain illustration - preserve aspect ratio for custom images
                     const mountainScenes = clonedDoc.querySelectorAll('.mountain-scene');
                     mountainScenes.forEach(mountainScene => {
-                        mountainScene.style.setProperty('width', '600px', 'important');
-                        mountainScene.style.setProperty('height', '400px', 'important');
+                        // Check if this contains a custom image instead of SVG
+                        const customImg = mountainScene.querySelector('img[alt="Custom slide image"]');
+                        if (customImg) {
+                            // For custom images, use a more flexible sizing approach
+                            mountainScene.style.setProperty('width', '600px', 'important');
+                            mountainScene.style.setProperty('height', '600px', 'important');
+                            mountainScene.style.setProperty('display', 'flex', 'important');
+                            mountainScene.style.setProperty('align-items', 'center', 'important');
+                            mountainScene.style.setProperty('justify-content', 'center', 'important');
+                        } else {
+                            // For SVG illustrations, keep original sizing
+                            mountainScene.style.setProperty('width', '600px', 'important');
+                            mountainScene.style.setProperty('height', '600px', 'important');
+                        }
                     });
                     
                     // Author section
