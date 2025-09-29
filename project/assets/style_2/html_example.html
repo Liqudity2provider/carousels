@@ -261,7 +261,7 @@
     <!--        THERE IS A PLACE WHERE DYNAMIC CARDS SHOULD BE INSERTED  -->
 
 
-<div class="controls">
+    <div class="controls">
     <button class="control-btn edit-toggle-btn" id="editToggleBtn" onclick="toggleEditMode()">
         ✏️ Edytuj tekst
     </button>
@@ -286,80 +286,80 @@
     <button class="control-btn download-btn" onclick="downloadCard(7)">
         📥 Pobierz kartę 7
     </button>
-</div>
-
-<div class="edit-mode-indicator" id="editModeIndicator">
-    Tryb edycji włączony - kliknij na tekst aby edytować
-</div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script type="module">
-    // Import html-to-image from CDN
-    import { toPng } from 'https://cdn.skypack.dev/html-to-image@1.11.11';
-    window.toPng = toPng;
+    </div>
     
+    <div class="edit-mode-indicator" id="editModeIndicator">
+        Tryb edycji włączony - kliknij na tekst aby edytować
+    </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="module">
+        // Import html-to-image from CDN
+        import { toPng } from 'https://cdn.skypack.dev/html-to-image@1.11.11';
+        window.toPng = toPng;
+        
     // Optimized image generation function with complete style matching
-    window.generateCardImage = async function(card, options = {}) {
-        const defaultOptions = {
-            width: 1080,
-            height: 1350,
-            backgroundColor: '#ffffff',
+        window.generateCardImage = async function(card, options = {}) {
+            const defaultOptions = {
+                width: 1080,
+                height: 1350,
+                backgroundColor: '#ffffff',
             pixelRatio: 2
-        };
-        
-        const finalOptions = { ...defaultOptions, ...options };
-        
-        // Store original styles
-        const originalStyles = {
-            position: card.style.position,
-            left: card.style.left,
-            top: card.style.top,
-            transform: card.style.transform,
-            transformOrigin: card.style.transformOrigin,
-            overflow: card.style.overflow,
+            };
+            
+            const finalOptions = { ...defaultOptions, ...options };
+            
+            // Store original styles
+            const originalStyles = {
+                position: card.style.position,
+                left: card.style.left,
+                top: card.style.top,
+                transform: card.style.transform,
+                transformOrigin: card.style.transformOrigin,
+                overflow: card.style.overflow,
             boxSizing: card.style.boxSizing,
             width: card.style.width,
             height: card.style.height
-        };
-        
-        try {
+            };
+            
+            try {
             // Set card to exact target dimensions to maintain container query scaling
             card.style.width = finalOptions.width + 'px';
             card.style.height = finalOptions.height + 'px';
-            card.style.position = 'absolute';
-            card.style.left = '0px';
-            card.style.top = '0px';
-            card.style.transform = 'none';
-            card.style.transformOrigin = 'top left';
-            card.style.overflow = 'hidden';
-            card.style.boxSizing = 'border-box';
-            
+                card.style.position = 'absolute';
+                card.style.left = '0px';
+                card.style.top = '0px';
+                card.style.transform = 'none';
+                card.style.transformOrigin = 'top left';
+                card.style.overflow = 'hidden';
+                card.style.boxSizing = 'border-box';
+                
             // Force layout recalculation for container queries
             card.offsetHeight; // Trigger reflow
             
             // Wait for layout to settle and container queries to recalculate
             await new Promise(resolve => setTimeout(resolve, 200));
             
-            const canvas = await html2canvas(card, {
+                const canvas = await html2canvas(card, {
                 backgroundColor: '#ffffff',
-                scale: finalOptions.pixelRatio,
-                useCORS: true,
-                allowTaint: true,
-                width: finalOptions.width,
-                height: finalOptions.height,
-                scrollX: 0,
-                scrollY: 0,
-                logging: false,
-                removeContainer: false,
+                    scale: finalOptions.pixelRatio,
+                    useCORS: true,
+                    allowTaint: true,
+                    width: finalOptions.width,
+                    height: finalOptions.height,
+                    scrollX: 0,
+                    scrollY: 0,
+                    logging: false,
+                    removeContainer: false,
                 foreignObjectRendering: false,
                 letterRendering: true,
                 dpi: 300,
-                onclone: function(clonedDoc) {
+                    onclone: function(clonedDoc) {
                     // Ensure body and card have white background
-                    clonedDoc.body.style.backgroundColor = '#ffffff';
-                    clonedDoc.body.style.background = '#ffffff';
-                    
+                        clonedDoc.body.style.backgroundColor = '#ffffff';
+                        clonedDoc.body.style.background = '#ffffff';
+                        
                     // Find the cloned card and ensure it has the correct dimensions
                     const clonedCard = clonedDoc.querySelector('.card');
                     if (clonedCard) {
@@ -466,7 +466,7 @@
                     // Author name
                     const authorNames = clonedDoc.querySelectorAll('.author-name');
                     authorNames.forEach(authorName => {
-                        authorName.style.setProperty('font-size', '22px', 'important');
+                        authorName.style.setProperty('font-size', '32px', 'important');
                         authorName.style.setProperty('font-weight', '500', 'important');
                         authorName.style.setProperty('color', '#34495e', 'important');
                         authorName.style.setProperty('gap', '16px', 'important');
@@ -483,107 +483,107 @@
                     });
                     
                     // Remove any remaining gradients and ensure white background
-                    const allElements = clonedDoc.querySelectorAll('*');
-                    allElements.forEach(el => {
-                        if (el.style) {
+                        const allElements = clonedDoc.querySelectorAll('*');
+                        allElements.forEach(el => {
+                            if (el.style) {
                             if (el.style.background && el.style.background.includes('gradient') && !el.classList.contains('author-section')) {
-                                el.style.background = '#ffffff';
-                            }
+                                    el.style.background = '#ffffff';
+                                }
                             if (el.style.backgroundImage && el.style.backgroundImage !== 'none' && !el.classList.contains('author-avatar')) {
-                                el.style.backgroundImage = 'none';
+                                    el.style.backgroundImage = 'none';
+                                }
                             }
-                        }
-                    });
-                }
-            });
-            
-            return canvas.toDataURL('image/png');
-            
-        } catch (error) {
+                        });
+                    }
+                });
+                
+                return canvas.toDataURL('image/png');
+                
+            } catch (error) {
             console.error('Image generation failed:', error);
             throw error;
-        } finally {
-            // Restore original styles
-            Object.keys(originalStyles).forEach(key => {
-                if (originalStyles[key] !== undefined) {
-                    card.style[key] = originalStyles[key];
-                } else {
-                    card.style.removeProperty(key);
-                }
-            });
-        }
-    };
-</script>
-<script>
-    let editMode = false;
-    const totalCards = 7; // This will be updated dynamically
+            } finally {
+                // Restore original styles
+                Object.keys(originalStyles).forEach(key => {
+                    if (originalStyles[key] !== undefined) {
+                        card.style[key] = originalStyles[key];
+                    } else {
+                        card.style.removeProperty(key);
+                    }
+                });
+            }
+        };
+    </script>
+    <script>
+        let editMode = false;
+        const totalCards = 7; // This will be updated dynamically
 
-    function toggleEditMode() {
-        editMode = !editMode;
-        const editToggleBtn = document.getElementById('editToggleBtn');
-        const editModeIndicator = document.getElementById('editModeIndicator');
-        const editableElements = document.querySelectorAll('.editable');
+        function toggleEditMode() {
+            editMode = !editMode;
+            const editToggleBtn = document.getElementById('editToggleBtn');
+            const editModeIndicator = document.getElementById('editModeIndicator');
+            const editableElements = document.querySelectorAll('.editable');
 
-        if (editMode) {
-            editToggleBtn.textContent = '💾 Zapisz';
-            editToggleBtn.classList.add('active');
-            editModeIndicator.classList.add('active');
-            
-            editableElements.forEach(element => {
-                element.setAttribute('contenteditable', 'true');
-            });
-        } else {
-            editToggleBtn.textContent = '✏️ Edytuj';
-            editToggleBtn.classList.remove('active');
-            editModeIndicator.classList.remove('active');
-            
-            editableElements.forEach(element => {
-                element.setAttribute('contenteditable', 'false');
-                element.blur();
-            });
-        }
-    }
-
-    async function downloadCard(cardNumber) {
-        const card = document.getElementById(`card${cardNumber}`);
-        if (!card) {
-            console.error(`Card ${cardNumber} not found`);
-            return;
+            if (editMode) {
+                editToggleBtn.textContent = '💾 Zapisz';
+                editToggleBtn.classList.add('active');
+                editModeIndicator.classList.add('active');
+                
+                editableElements.forEach(element => {
+                    element.setAttribute('contenteditable', 'true');
+                });
+            } else {
+                editToggleBtn.textContent = '✏️ Edytuj';
+                editToggleBtn.classList.remove('active');
+                editModeIndicator.classList.remove('active');
+                
+                editableElements.forEach(element => {
+                    element.setAttribute('contenteditable', 'false');
+                    element.blur();
+                });
+            }
         }
 
-        const controls = document.querySelector('.controls');
-        const indicator = document.querySelector('.edit-mode-indicator');
-        
-        // Hide controls during export
-        controls.style.display = 'none';
-        indicator.style.display = 'none';
-        
-        try {
-            // Wait for fonts to be ready
-            await document.fonts?.ready;
+        async function downloadCard(cardNumber) {
+            const card = document.getElementById(`card${cardNumber}`);
+            if (!card) {
+                console.error(`Card ${cardNumber} not found`);
+                return;
+            }
+
+            const controls = document.querySelector('.controls');
+            const indicator = document.querySelector('.edit-mode-indicator');
             
+            // Hide controls during export
+            controls.style.display = 'none';
+            indicator.style.display = 'none';
+            
+            try {
+                // Wait for fonts to be ready
+                await document.fonts?.ready;
+
             // Generate image
             const dataUrl = await window.generateCardImage(card);
             
             // Create download link
-            const link = document.createElement('a');
+                const link = document.createElement('a');
             link.download = `card-${cardNumber}.png`;
             link.href = dataUrl;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-        } catch (error) {
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+            } catch (error) {
             console.error('Download failed:', error);
             alert('Nie udało się pobrać karty. Spróbuj ponownie.');
-        } finally {
+            } finally {
             // Restore controls
-            controls.style.display = 'flex';
-            if (editMode) {
-                indicator.style.display = 'block';
+                controls.style.display = 'flex';
+                if (editMode) {
+                    indicator.style.display = 'block';
+                }
             }
         }
-    }
-</script>
+    </script>
 </body>
 </html>
