@@ -6,11 +6,12 @@ from pathlib import Path
 from typing import Dict, Optional, List
 import threading
 import uvicorn
+import tempfile
 
 import aiofiles
 from openai.types import ResponseFormatJSONObject
 from openai.types.chat import completion_create_params, ChatCompletionUserMessageParam
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, File
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 from anthropic import AsyncAnthropic
 from openai import AsyncOpenAI
@@ -312,6 +313,7 @@ IMPORTANT: Respond ONLY with valid JSON. No additional text or explanations.
         self.app.add_handler(CommandHandler("stats", self.show_stats))
         self.app.add_handler(CallbackQueryHandler(self.handle_callback))
         self.app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
+        self.app.add_handler(MessageHandler(filters.VOICE, self.handle_voice_message))
         
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle /start command"""
@@ -502,6 +504,122 @@ IMPORTANT: Respond ONLY with valid JSON. No additional text or explanations.
             await self.modify_content(update, user_id, message_text)
         elif state == 'awaiting_html_modifications':
             await self.modify_html_content(update, user_id, message_text)
+    
+    async def handle_voice_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Handle voice messages by transcribing them with Whisper and processing as text"""
+        user_id = update.effective_user.id
+        
+        if user_id not in user_sessions:
+            await self.start_command(update, context)
+            return
+        
+        # Show processing message
+        processing_msg = await update.message.reply_text("🎤 Transcribing your voice message...")
+        
+        try:
+            # Get the voice file
+            voice_file = await update.message.voice.get_file()
+            
+            # Create a temporary file to store the voice message
+            with tempfile.NamedTemporaryFile(suffix='.ogg', delete=False) as temp_file:
+                temp_path = temp_file.name
+                
+            # Download the voice file
+            await voice_file.download_to_drive(temp_path)
+            
+            # Transcribe using OpenAI Whisper
+            if not openai_client:
+                await processing_msg.edit_text("❌ OpenAI API is not configured. Voice messages are not available.")
+                os.unlink(temp_path)
+                return
+                
+            with open(temp_path, 'rb') as audio_file:
+                transcript = await openai_client.audio.transcriptions.create(
+                    model="whisper-1",
+                    file=audio_file,
+                    language=None  # Auto-detect language
+                )
+            
+            # Clean up the temporary file
+            os.unlink(temp_path)
+            
+            # Get the transcribed text
+            transcribed_text = transcript.text.strip()
+            
+            if not transcribed_text:
+                await processing_msg.edit_text("❌ Could not transcribe the voice message. Please try again or send a text message.")
+                return
+            
+            # Update the processing message to show what was transcribed
+            await processing_msg.edit_text(f"🎤 Transcribed: \"{transcribed_text}\"\n\n⏳ Processing your request...")
+            
+            # Process the transcribed text as if it were a regular text message
+            session = user_sessions[user_id]
+            state = session.get('state')
+            
+            if state == 'awaiting_topic':
+                await self.generate_content_from_voice(update, user_id, transcribed_text, processing_msg)
+            elif state == 'awaiting_image_description':
+                await self.generate_image_from_voice(update, user_id, transcribed_text, processing_msg)
+            elif state == 'awaiting_image_description_for_slide':
+                await self.generate_slide_image_from_voice(update, user_id, transcribed_text, processing_msg)
+            elif state == 'awaiting_image_url':
+                await processing_msg.edit_text("❌ Please send the image URL as text, not voice message.")
+            elif state == 'awaiting_modifications':
+                await self.modify_content_from_voice(update, user_id, transcribed_text, processing_msg)
+            elif state == 'awaiting_html_modifications':
+                await self.modify_html_content_from_voice(update, user_id, transcribed_text, processing_msg)
+            else:
+                await processing_msg.edit_text(f"🎤 Transcribed: \"{transcribed_text}\"\n\n❓ I'm not sure what to do with this. Please use the menu buttons to navigate.")
+                
+        except Exception as e:
+            logger.error(f"Error processing voice message: {e}")
+            await processing_msg.edit_text("❌ Error processing voice message. Please try again or send a text message.")
+    
+    async def generate_content_from_voice(self, update: Update, user_id: int, topic: str, processing_msg):
+        """Generate content from voice transcription"""
+        try:
+            await processing_msg.edit_text(f"🎤 Transcribed: \"{topic}\"\n\n🤖 Generating carousel content...")
+            await self.generate_content(update, user_id, topic)
+        except Exception as e:
+            logger.error(f"Error generating content from voice: {e}")
+            await processing_msg.edit_text("❌ Error generating content. Please try again.")
+    
+    async def generate_image_from_voice(self, update: Update, user_id: int, description: str, processing_msg):
+        """Generate image from voice transcription"""
+        try:
+            await processing_msg.edit_text(f"🎤 Transcribed: \"{description}\"\n\n🎨 Generating image...")
+            await self.generate_image(update, user_id, description)
+        except Exception as e:
+            logger.error(f"Error generating image from voice: {e}")
+            await processing_msg.edit_text("❌ Error generating image. Please try again.")
+    
+    async def generate_slide_image_from_voice(self, update: Update, user_id: int, description: str, processing_msg):
+        """Generate slide image from voice transcription"""
+        try:
+            await processing_msg.edit_text(f"🎤 Transcribed: \"{description}\"\n\n🎨 Generating slide image...")
+            await self.generate_slide_image(update, user_id, description)
+        except Exception as e:
+            logger.error(f"Error generating slide image from voice: {e}")
+            await processing_msg.edit_text("❌ Error generating slide image. Please try again.")
+    
+    async def modify_content_from_voice(self, update: Update, user_id: int, modifications: str, processing_msg):
+        """Modify content from voice transcription"""
+        try:
+            await processing_msg.edit_text(f"🎤 Transcribed: \"{modifications}\"\n\n✏️ Modifying content...")
+            await self.modify_content(update, user_id, modifications)
+        except Exception as e:
+            logger.error(f"Error modifying content from voice: {e}")
+            await processing_msg.edit_text("❌ Error modifying content. Please try again.")
+    
+    async def modify_html_content_from_voice(self, update: Update, user_id: int, modifications: str, processing_msg):
+        """Modify HTML content from voice transcription"""
+        try:
+            await processing_msg.edit_text(f"🎤 Transcribed: \"{modifications}\"\n\n✏️ Modifying HTML content...")
+            await self.modify_html_content(update, user_id, modifications)
+        except Exception as e:
+            logger.error(f"Error modifying HTML content from voice: {e}")
+            await processing_msg.edit_text("❌ Error modifying HTML content. Please try again.")
             
     async def generate_content(self, update: Update, user_id: int, topic: str):
         """Generate carousel content using Claude"""
