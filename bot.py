@@ -1031,17 +1031,48 @@ Focus on symbols like: paths, bridges, mountains, trees growing, doors opening, 
                 "• Abstract stairs ascending toward a bright horizon"
             )
     
+    async def download_and_save_image(self, image_url: str, user_id: int) -> str:
+        """Download image from external URL and save it locally"""
+        try:
+            # Generate unique filename
+            image_id = str(uuid.uuid4())
+            filename = f"slide_image_{user_id}_{image_id}.png"
+            local_path = static_dir / filename
+            
+            # Download the image
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.get(image_url)
+                response.raise_for_status()
+                
+                # Save the image locally
+                async with aiofiles.open(local_path, 'wb') as f:
+                    await f.write(response.content)
+            
+            # Return the local URL that will be accessible from your server
+            local_url = f"{BASE_URL}/static/{filename}"
+            logger.info(f"Image downloaded and saved: {local_url}")
+            return local_url
+            
+        except Exception as e:
+            logger.error(f"Error downloading image: {e}")
+            # Fallback to original URL if download fails
+            return image_url
+    
     async def send_image_for_approval(self, update: Update, user_id: int, image_url: str, description: str, loading_msg):
         """Helper method to send generated image for user approval"""
-        # Store image URL in session
-        user_sessions[user_id].update({
-            'state': 'reviewing_slide_image',
-            'slide_image_url': image_url,
-            'slide_image_description': description
-        })
-        
-        # Send the generated image for approval
         try:
+            # Download and save the image locally for better accessibility
+            local_image_url = await self.download_and_save_image(image_url, user_id)
+            
+            # Store both original and local URLs in session
+            user_sessions[user_id].update({
+                'state': 'reviewing_slide_image',
+                'slide_image_url': local_image_url,  # Use local URL for HTML
+                'original_image_url': image_url,     # Keep original for Telegram
+                'slide_image_description': description
+            })
+            
+            # Send the generated image for approval (use original URL for Telegram)
             await update.message.reply_photo(
                 photo=image_url,
                 caption=f"🖼️ *Generated Image for First Slide*\n\n*Description:* {description}\n\nDo you like this image for your carousel's first slide?",
@@ -1371,21 +1402,35 @@ Focus on symbols like: paths, bridges, mountains, trees growing, doors opening, 
             )
             return
         
-        # Store the custom URL in session
-        user_sessions[user_id].update({
-            'state': 'reviewing_slide_image',
-            'slide_image_url': image_url,
-            'slide_image_description': 'Custom image provided by user'
-        })
+        # Show processing message
+        processing_msg = await update.message.reply_text("⬇️ Downloading and processing your image...")
         
-        # Show confirmation
-        await update.message.reply_text(
-            f"✅ *Custom Image URL Saved*\n\n`{image_url}`\n\nProceeding to create your carousel...",
-            parse_mode='Markdown'
-        )
-        
-        # Proceed to HTML generation
-        await self.proceed_to_html_generation_from_message(update, user_id)
+        try:
+            # Download and save the image locally for better accessibility
+            local_image_url = await self.download_and_save_image(image_url, user_id)
+            
+            # Store both URLs in session
+            user_sessions[user_id].update({
+                'state': 'reviewing_slide_image',
+                'slide_image_url': local_image_url,  # Use local URL for HTML
+                'original_image_url': image_url,     # Keep original for reference
+                'slide_image_description': 'Custom image provided by user'
+            })
+            
+            # Show confirmation
+            await processing_msg.edit_text(
+                f"✅ *Custom Image Downloaded and Saved*\n\n`{image_url}`\n\nProceeding to create your carousel...",
+                parse_mode='Markdown'
+            )
+            
+            # Proceed to HTML generation
+            await self.proceed_to_html_generation_from_message(update, user_id)
+            
+        except Exception as e:
+            logger.error(f"Error processing custom image URL: {e}")
+            await processing_msg.edit_text(
+                "❌ Error downloading the image. Please check the URL and try again, or skip the image."
+            )
     
     async def proceed_to_html_generation(self, query, user_id: int):
         """Proceed to HTML generation with or without custom image"""
